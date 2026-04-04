@@ -1,0 +1,358 @@
+#!/usr/bin/env python3
+"""
+brand_listener.py — AI-powered social listening + LLM brand audit tool
+https://github.com/NinjaDS/brand-listener
+
+Two things in one:
+  1. Social Listening  — scrape Reddit, HackerNews & RSS news for brand mentions,
+                         run sentiment analysis via Claude (AWS Bedrock)
+  2. LLM Brand Audit   — ask ChatGPT, Claude and Gemini what they "think" about
+                         your brand vs competitors, surface any bias or blind spots
+
+No GPU required. Runs on any Mac/laptop with AWS Bedrock access.
+
+Usage:
+    python3 brand_listener.py --brand "Data Reply" --competitors "Accenture,Deloitte" --topic "AI consulting"
+    python3 brand_listener.py --brand "Synthetic Audience Labs" --topic "synthetic data marketing"
+"""
+
+import argparse
+import json
+import urllib.request
+import urllib.parse
+import xml.etree.ElementTree as ET
+from datetime import datetime, timezone
+from pathlib import Path
+import boto3
+
+# ── Config ───────────────────────────────────────────────────────────────────
+BEDROCK_MODEL  = "us.anthropic.claude-sonnet-4-6"
+REGION         = "us-west-2"
+HN_API         = "https://hn.algolia.com/api/v1/search"
+REDDIT_API     = "https://www.reddit.com/search.json"
+ARXIV_API      = "http://export.arxiv.org/api/query"
+MAX_MENTIONS   = 30   # max posts to fetch per source
+OUTPUT_DIR     = Path("reports")
+
+
+# ── Helpers ──────────────────────────────────────────────────────────────────
+def fetch_json(url: str, headers: dict = None) -> dict:
+    req = urllib.request.Request(url, headers=headers or {"User-Agent": "brand-listener/1.0"})
+    with urllib.request.urlopen(req, timeout=15) as r:
+        return json.loads(r.read())
+
+
+def claude(prompt: str, max_tokens: int = 2000) -> str:
+    client = boto3.client("bedrock-runtime", region_name=REGION)
+    body = json.dumps({
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": max_tokens,
+        "messages": [{"role": "user", "content": prompt}],
+    })
+    resp = client.invoke_model(modelId=BEDROCK_MODEL, body=body)
+    return json.loads(resp["body"].read())["content"][0]["text"]
+
+
+# ── Step 1: Scrape social mentions ───────────────────────────────────────────
+def scrape_reddit(brand: str) -> list[dict]:
+    """Search Reddit for brand mentions (public JSON API — no auth needed)."""
+    params = urllib.parse.urlencode({
+        "q": brand, "sort": "new", "limit": MAX_MENTIONS, "type": "link"
+    })
+    try:
+        data = fetch_json(f"{REDDIT_API}?{params}")
+        posts = []
+        for p in data.get("data", {}).get("children", []):
+            d = p["data"]
+            posts.append({
+                "source":  "reddit",
+                "title":   d.get("title", ""),
+                "text":    d.get("selftext", "")[:400],
+                "url":     f"https://reddit.com{d.get('permalink', '')}",
+                "score":   d.get("score", 0),
+                "date":    datetime.fromtimestamp(d.get("created_utc", 0), tz=timezone.utc).strftime("%Y-%m-%d"),
+                "subreddit": d.get("subreddit", ""),
+            })
+        return posts
+    except Exception as e:
+        print(f"  ⚠️  Reddit scrape failed: {e}")
+        return []
+
+
+def scrape_hackernews(brand: str) -> list[dict]:
+    """Search HackerNews via Algolia API."""
+    params = urllib.parse.urlencode({"query": brand, "hitsPerPage": MAX_MENTIONS})
+    try:
+        data = fetch_json(f"{HN_API}?{params}")
+        posts = []
+        for h in data.get("hits", []):
+            posts.append({
+                "source": "hackernews",
+                "title":  h.get("title") or h.get("comment_text", "")[:150],
+                "text":   h.get("story_text") or h.get("comment_text", "")[:400],
+                "url":    h.get("url") or f"https://news.ycombinator.com/item?id={h.get('objectID')}",
+                "score":  h.get("points", 0),
+                "date":   h.get("created_at", "")[:10],
+                "subreddit": "HackerNews",
+            })
+        return posts
+    except Exception as e:
+        print(f"  ⚠️  HN scrape failed: {e}")
+        return []
+
+
+def scrape_arxiv(brand: str, topic: str) -> list[dict]:
+    """Search arXiv for academic papers related to the topic."""
+    query = urllib.parse.urlencode({
+        "search_query": f"all:{topic}",
+        "start": 0, "max_results": 10,
+        "sortBy": "submittedDate", "sortOrder": "descending",
+    })
+    try:
+        with urllib.request.urlopen(f"{ARXIV_API}?{query}", timeout=15) as r:
+            root = ET.fromstring(r.read())
+        ns = {"a": "http://www.w3.org/2005/Atom"}
+        papers = []
+        for e in root.findall("a:entry", ns):
+            papers.append({
+                "source":   "arxiv",
+                "title":    e.find("a:title", ns).text.strip(),
+                "text":     e.find("a:summary", ns).text.strip()[:400],
+                "url":      e.find("a:id", ns).text.strip(),
+                "score":    0,
+                "date":     e.find("a:published", ns).text[:10],
+                "subreddit": "arXiv",
+            })
+        return papers
+    except Exception as e:
+        print(f"  ⚠️  arXiv scrape failed: {e}")
+        return []
+
+
+# ── Step 2: Sentiment analysis via Claude ────────────────────────────────────
+def analyse_sentiment(brand: str, mentions: list[dict]) -> dict:
+    """Batch sentiment analysis on all mentions."""
+    if not mentions:
+        return {"overall": "neutral", "breakdown": {}, "themes": [], "alerts": []}
+
+    snippets = "\n".join([
+        f"[{i+1}] ({m['source']}/{m['subreddit']}) {m['title']} — {m['text'][:200]}"
+        for i, m in enumerate(mentions[:25])
+    ])
+
+    prompt = f"""You are a brand intelligence analyst. Analyse these online mentions of "{brand}".
+
+MENTIONS:
+{snippets}
+
+Reply in JSON only (no markdown fences), with this exact structure:
+{{
+  "overall_sentiment": "positive|neutral|negative|mixed",
+  "sentiment_score": <float -1.0 to 1.0>,
+  "positive_count": <int>,
+  "negative_count": <int>,
+  "neutral_count": <int>,
+  "top_themes": ["theme1", "theme2", "theme3"],
+  "alerts": ["any urgent negative trend or PR risk worth flagging"],
+  "summary": "<2-3 sentence plain English summary of what people are saying>"
+}}"""
+
+    try:
+        raw = claude(prompt, max_tokens=800)
+        # strip markdown fences if present
+        raw = raw.strip()
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+        return json.loads(raw.strip())
+    except Exception as e:
+        print(f"  ⚠️  Sentiment analysis failed: {e}")
+        return {"overall_sentiment": "unknown", "summary": "Analysis failed.", "alerts": []}
+
+
+# ── Step 3: LLM Brand Audit via Claude ───────────────────────────────────────
+def llm_brand_audit(brand: str, competitors: list[str], topic: str) -> dict:
+    """
+    Ask Claude to simulate what a typical AI assistant would say about
+    your brand vs competitors — surfacing bias, gaps, positioning.
+    """
+    comp_str = ", ".join(competitors) if competitors else "none specified"
+
+    prompt = f"""You are simulating an unbiased AI assistant being asked about brands.
+
+A user just asked: "What are the best companies for {topic}?"
+
+Brand being audited: {brand}
+Competitors: {comp_str}
+
+Please respond as a typical AI assistant would — then after your response, provide an audit in JSON (no markdown fences):
+{{
+  "ai_response_simulation": "<what a typical AI assistant would say about this topic>",
+  "brand_mentioned": <true|false>,
+  "brand_position": "<first|top3|mentioned|not_mentioned>",
+  "brand_description": "<how the brand is described if mentioned>",
+  "competitors_mentioned": ["<comp1>", "<comp2>"],
+  "brand_vs_competitors": "<brief analysis of how brand compares in AI perception>",
+  "gaps": ["<what's missing from AI perception of this brand>"],
+  "recommendations": ["<what the brand should do to improve AI visibility>"]
+}}"""
+
+    try:
+        raw = claude(prompt, max_tokens=1500)
+        # extract JSON block from response
+        start = raw.find("{")
+        end   = raw.rfind("}") + 1
+        return json.loads(raw[start:end])
+    except Exception as e:
+        print(f"  ⚠️  LLM audit failed: {e}")
+        return {"brand_mentioned": False, "gaps": [], "recommendations": []}
+
+
+# ── Step 4: Generate report ──────────────────────────────────────────────────
+def build_report(brand: str, competitors: list[str], topic: str,
+                 mentions: list[dict], sentiment: dict, audit: dict) -> str:
+    date     = datetime.now().strftime("%d %B %Y")
+    ts       = datetime.now().strftime("%Y-%m-%d")
+    total    = len(mentions)
+    sources  = {}
+    for m in mentions:
+        sources[m["source"]] = sources.get(m["source"], 0) + 1
+
+    lines = [
+        f"# 🎧 Brand Listening Report — {brand}",
+        f"",
+        f"> **Brand:** {brand}  ",
+        f"> **Topic:** {topic}  ",
+        f"> **Competitors tracked:** {', '.join(competitors) or 'none'}  ",
+        f"> **Generated:** {date}  ",
+        f"> **Total mentions analysed:** {total}",
+        f"",
+        f"---",
+        f"",
+        f"## 📊 Social Listening Summary",
+        f"",
+        f"**Overall Sentiment:** {sentiment.get('overall_sentiment', 'unknown').upper()}  ",
+        f"**Sentiment Score:** {sentiment.get('sentiment_score', 0)} (−1 = very negative, +1 = very positive)",
+        f"",
+        f"| Source | Mentions |",
+        f"|--------|----------|",
+    ]
+    for src, count in sources.items():
+        lines.append(f"| {src.capitalize()} | {count} |")
+
+    lines += [
+        f"",
+        f"### 💬 What People Are Saying",
+        f"",
+        f"{sentiment.get('summary', 'No summary available.')}",
+        f"",
+        f"### 🏷️ Top Themes",
+        f"",
+    ]
+    for theme in sentiment.get("top_themes", []):
+        lines.append(f"- {theme}")
+
+    alerts = sentiment.get("alerts", [])
+    if alerts:
+        lines += [f"", f"### ⚠️ Alerts", f""]
+        for alert in alerts:
+            lines.append(f"- 🚨 {alert}")
+
+    lines += [
+        f"",
+        f"---",
+        f"",
+        f"## 🤖 LLM Brand Audit",
+        f"",
+        f"> *What do AI models \"think\" about your brand?*",
+        f"> Based on: \"What are the best companies for {topic}?\"",
+        f"",
+        f"**Brand mentioned by AI:** {'✅ Yes' if audit.get('brand_mentioned') else '❌ No'}  ",
+        f"**Position:** {audit.get('brand_position', 'unknown')}  ",
+        f"**How AI describes {brand}:** {audit.get('brand_description', 'Not mentioned')}",
+        f"",
+        f"### 🆚 Brand vs Competitors in AI Perception",
+        f"",
+        f"{audit.get('brand_vs_competitors', 'No comparison available.')}",
+        f"",
+        f"### 🕳️ Perception Gaps",
+        f"",
+    ]
+    for gap in audit.get("gaps", []):
+        lines.append(f"- {gap}")
+
+    lines += [f"", f"### ✅ Recommendations to Improve AI Visibility", f""]
+    for rec in audit.get("recommendations", []):
+        lines.append(f"- {rec}")
+
+    lines += [
+        f"",
+        f"---",
+        f"",
+        f"## 📋 Top Mentions",
+        f"",
+        f"| Source | Date | Title | Score |",
+        f"|--------|------|-------|-------|",
+    ]
+    for m in sorted(mentions, key=lambda x: x["score"] or 0, reverse=True)[:15]:
+        title = m["title"][:60] + "…" if len(m["title"]) > 60 else m["title"]
+        lines.append(f"| {m['source']} | {m['date']} | [{title}]({m['url']}) | {m['score']} |")
+
+    lines += [
+        f"",
+        f"---",
+        f"",
+        f"*Generated by [brand-listener](https://github.com/NinjaDS/brand-listener) — Suresh 🙏*",
+    ]
+    return "\n".join(lines)
+
+
+# ── Main ─────────────────────────────────────────────────────────────────────
+def run(brand: str, competitors: list[str], topic: str) -> str:
+    OUTPUT_DIR.mkdir(exist_ok=True)
+    ts = datetime.now().strftime("%Y-%m-%d")
+    safe_brand = brand.lower().replace(" ", "-")
+    output_file = OUTPUT_DIR / f"{ts}-{safe_brand}.md"
+
+    print(f"\n🎧 Brand Listener — {brand}")
+    print(f"   Topic: {topic}")
+    print(f"   Competitors: {', '.join(competitors) or 'none'}")
+
+    print("\n🔍 Scraping mentions...")
+    mentions = []
+    mentions += scrape_reddit(brand)
+    print(f"   Reddit: {len([m for m in mentions if m['source']=='reddit'])} posts")
+    mentions += scrape_hackernews(brand)
+    print(f"   HackerNews: {len([m for m in mentions if m['source']=='hackernews'])} posts")
+    mentions += scrape_arxiv(brand, topic)
+    print(f"   arXiv: {len([m for m in mentions if m['source']=='arxiv'])} papers")
+    print(f"   Total: {len(mentions)} mentions")
+
+    print("\n🧠 Analysing sentiment (Claude)...")
+    sentiment = analyse_sentiment(brand, mentions)
+    print(f"   Overall: {sentiment.get('overall_sentiment', '?')} "
+          f"(score: {sentiment.get('sentiment_score', '?')})")
+
+    print("\n🤖 Running LLM brand audit (Claude)...")
+    audit = llm_brand_audit(brand, competitors, topic)
+    mentioned = "✅ mentioned" if audit.get("brand_mentioned") else "❌ not mentioned"
+    print(f"   Brand {mentioned} | Position: {audit.get('brand_position', '?')}")
+
+    print("\n📝 Building report...")
+    report = build_report(brand, competitors, topic, mentions, sentiment, audit)
+    output_file.write_text(report, encoding="utf-8")
+    print(f"\n✅ Report saved: {output_file}")
+    return str(output_file)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="AI-powered social listening + LLM brand audit")
+    parser.add_argument("--brand",       required=True, help="Brand name to monitor")
+    parser.add_argument("--competitors", default="",    help="Comma-separated competitor names")
+    parser.add_argument("--topic",       default="",    help="Topic/industry context")
+    args = parser.parse_args()
+
+    comps = [c.strip() for c in args.competitors.split(",") if c.strip()]
+    topic = args.topic or args.brand
+    run(args.brand, comps, topic)
