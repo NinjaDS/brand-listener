@@ -44,7 +44,7 @@ BEDROCK_MODEL  = "us.anthropic.claude-sonnet-4-6"
 REGION         = "us-west-2"
 HN_API         = "https://hn.algolia.com/api/v1/search"
 REDDIT_API     = "https://www.reddit.com/search.json"
-ARXIV_API      = "http://export.arxiv.org/api/query"
+GNEWS_RSS      = "https://news.google.com/rss/search"
 MAX_MENTIONS   = 30   # max posts to fetch per source
 OUTPUT_DIR     = Path("reports")
 
@@ -117,31 +117,43 @@ def scrape_hackernews(brand: str, country: str = "") -> list[dict]:
         return []
 
 
-def scrape_arxiv(brand: str, topic: str) -> list[dict]:
-    """Search arXiv for academic papers related to the topic."""
-    query = urllib.parse.urlencode({
-        "search_query": f"all:{topic}",
-        "start": 0, "max_results": 10,
-        "sortBy": "submittedDate", "sortOrder": "descending",
-    })
+def scrape_news(brand: str, country: str = "") -> list[dict]:
+    """Scrape Google News RSS for brand mentions."""
+    query = f"{brand} {country}".strip()
+    params = urllib.parse.urlencode({"q": query, "hl": "en-US", "gl": "US", "ceid": "US:en"})
     try:
-        with urllib.request.urlopen(f"{ARXIV_API}?{query}", timeout=15) as r:
+        url = f"{GNEWS_RSS}?{params}"
+        req = urllib.request.Request(url, headers={"User-Agent": "brand-listener/1.0"})
+        with urllib.request.urlopen(req, timeout=15) as r:
             root = ET.fromstring(r.read())
-        ns = {"a": "http://www.w3.org/2005/Atom"}
-        papers = []
-        for e in root.findall("a:entry", ns):
-            papers.append({
-                "source":   "arxiv",
-                "title":    e.find("a:title", ns).text.strip(),
-                "text":     e.find("a:summary", ns).text.strip()[:400],
-                "url":      e.find("a:id", ns).text.strip(),
-                "score":    0,
-                "date":     e.find("a:published", ns).text[:10],
-                "subreddit": "arXiv",
+        ns = {"media": "http://search.yahoo.com/mrss/"}
+        articles = []
+        for item in root.findall(".//item")[:MAX_MENTIONS]:
+            title   = item.findtext("title", "").strip()
+            link    = item.findtext("link", "").strip()
+            desc    = item.findtext("description", "").strip()
+            pub     = item.findtext("pubDate", "")[:16]
+            source  = item.findtext("source", "News")
+            # parse date
+            try:
+                from email.utils import parsedate_to_datetime
+                date_str = parsedate_to_datetime(item.findtext("pubDate", "")).strftime("%Y-%m-%d")
+            except Exception:
+                date_str = datetime.now().strftime("%Y-%m-%d")
+            import re as _re
+            desc_clean = _re.sub(r"<[^>]+>", "", desc)[:400]
+            articles.append({
+                "source":    "news",
+                "title":     title,
+                "text":      desc_clean,
+                "url":       link,
+                "score":     0,
+                "date":      date_str,
+                "subreddit": source,
             })
-        return papers
+        return articles
     except Exception as e:
-        print(f"  ⚠️  arXiv scrape failed: {e}")
+        print(f"  ⚠️  News scrape failed: {e}")
         return []
 
 
@@ -390,10 +402,14 @@ def run(brand: str, competitors: list[str], topic: str,
     print(f"   Reddit: {len([m for m in mentions if m['source']=='reddit'])} posts")
     mentions += scrape_hackernews(brand, country)
     print(f"   HackerNews: {len([m for m in mentions if m['source']=='hackernews'])} posts")
-    mentions += scrape_arxiv(brand, topic)
-    print(f"   arXiv: {len([m for m in mentions if m['source']=='arxiv'])} papers")
+    news_results = scrape_news(brand, country)
+    mentions += news_results
+    print(f"   News: {len(news_results)} articles")
     if LINKEDIN_AVAILABLE:
         mentions += _scrape_linkedin(brand, country=country)
+    else:
+        from linkedin_scraper import scrape_linkedin as _scrape_linkedin_direct
+        mentions += _scrape_linkedin_direct(brand, country=country)
     print(f"   Total: {len(mentions)} mentions")
 
     print("\n🧠 Analysing sentiment (Claude)...")
