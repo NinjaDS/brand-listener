@@ -25,6 +25,13 @@ from datetime import datetime, timezone
 from pathlib import Path
 import boto3
 
+# ── LinkedIn scraper (optional import)
+try:
+    from linkedin_scraper import scrape_linkedin as _scrape_linkedin
+    LINKEDIN_AVAILABLE = True
+except ImportError:
+    LINKEDIN_AVAILABLE = False
+
 # ── Config ───────────────────────────────────────────────────────────────────
 BEDROCK_MODEL  = "us.anthropic.claude-sonnet-4-6"
 REGION         = "us-west-2"
@@ -327,6 +334,8 @@ def run(brand: str, competitors: list[str], topic: str) -> str:
     print(f"   HackerNews: {len([m for m in mentions if m['source']=='hackernews'])} posts")
     mentions += scrape_arxiv(brand, topic)
     print(f"   arXiv: {len([m for m in mentions if m['source']=='arxiv'])} papers")
+    if LINKEDIN_AVAILABLE:
+        mentions += _scrape_linkedin(brand)
     print(f"   Total: {len(mentions)} mentions")
 
     print("\n🧠 Analysing sentiment (Claude)...")
