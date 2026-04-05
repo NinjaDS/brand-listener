@@ -116,24 +116,24 @@ Opens at **http://localhost:8501** — interactive UI with charts, LinkedIn brea
 ## Sample Output
 
 ```
-🎧 Brand Listener — Accenture
-   Topic: IT consulting
+🎧 Brand Listener — Adidas
+   Topic: sportswear athletic apparel
    Region context: global
 
 🔍 Scraping mentions...
    Reddit: 30 posts
-   HackerNews: 28 posts
+   HackerNews: 30 posts
    arXiv: 10 papers
-   Total: 68 mentions
+   Total: 70 mentions
 
 🧠 Analysing sentiment (Claude)...
-   Overall: positive (score: 0.42)
+   Overall: neutral (score: 0.15)
 
 🤖 Running LLM brand audit (Claude)...
    Brand ✅ mentioned | Position: top3
 
-✅ Markdown report saved: reports/2026-04-05-accenture.md
-✅ HTML report saved:     reports/2026-04-05-accenture.html
+✅ Markdown report saved: reports/2026-04-05-adidas.md
+✅ HTML report saved:     reports/2026-04-05-adidas.html
 ```
 
 ---
