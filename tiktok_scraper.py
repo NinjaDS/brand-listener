@@ -47,29 +47,42 @@ def _google_cse(query: str, num: int = 10) -> list[dict]:
         return []
 
 
-def _google_scrape(query: str, num: int = 10) -> list[dict]:
-    params = urllib.parse.urlencode({"q": query, "num": num, "hl": "en"})
+def _ddg_search(query: str, num: int = 10) -> list[dict]:
+    """Search via DuckDuckGo HTML endpoint — no API key, no rate limits."""
+    params = urllib.parse.urlencode({"q": query, "kl": "en-us"})
     try:
         req = urllib.request.Request(
-            f"https://www.google.com/search?{params}", headers=HEADERS)
+            f"https://html.duckduckgo.com/html/?{params}",
+            headers={
+                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                              "AppleWebKit/537.36 (KHTML, like Gecko) "
+                              "Chrome/122.0.0.0 Safari/537.36",
+                "Accept": "text/html,application/xhtml+xml",
+                "Accept-Language": "en-US,en;q=0.9",
+            }
+        )
         with urllib.request.urlopen(req, timeout=15) as r:
             html = r.read().decode("utf-8", errors="ignore")
-        links    = re.findall(r'/url\?q=(https?://[^&"]+)', html)
-        titles   = re.findall(r'<h3[^>]*>([^<]+)</h3>', html)
-        snippets = re.findall(r'<div[^>]*data-sncf[^>]*>([^<]{30,300})<', html)
-        results  = []
-        for i, link in enumerate(links[:num]):
-            link = urllib.parse.unquote(link)
-            if "google.com" in link or "accounts.google" in link:
+
+        results = []
+        titles   = re.findall(r'class="result__a"[^>]*>([^<]+)<', html)
+        snippets = re.findall(r'class="result__snippet"[^>]*>([^<]{20,400})<', html)
+        hrefs    = re.findall(r'href="(https?://[^"]+)"', html)
+        hrefs    = [h for h in hrefs if "duckduckgo.com" not in h
+                    and "duck.com" not in h][:num]
+
+        for i, title in enumerate(titles[:num]):
+            url = hrefs[i] if i < len(hrefs) else ""
+            if not url:
                 continue
             results.append({
-                "title":   titles[i] if i < len(titles) else link,
-                "link":    link,
-                "snippet": snippets[i] if i < len(snippets) else "",
+                "title":   re.sub(r"<[^>]+>", "", title).strip(),
+                "link":    url,
+                "snippet": snippets[i].strip() if i < len(snippets) else "",
             })
         return results
     except Exception as e:
-        print(f"  ⚠️  Google scrape failed: {e}")
+        print(f"  ⚠️  DuckDuckGo search failed: {e}")
         return []
 
 
@@ -94,7 +107,7 @@ def scrape_tiktok(brand: str, max_results: int = 20, country: str = "") -> list[
 
     for query in queries:
         time.sleep(1.5)
-        items = _google_cse(query, per_query) or _google_scrape(query, per_query)
+        items = _google_cse(query, per_query) or _ddg_search(query, per_query)
 
         for item in items:
             url     = item.get("link") or item.get("url", "")
