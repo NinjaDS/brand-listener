@@ -188,41 +188,66 @@ Reply in JSON only (no markdown fences), with this exact structure:
 
 
 # ── Step 3: LLM Brand Audit via Claude ───────────────────────────────────────
-def llm_brand_audit(brand: str, competitors: list[str], topic: str) -> dict:
+REGION_MAP = {
+    "global":    "Respond as a global AI assistant with no regional bias.",
+    "european":  "Respond as an AI assistant advising a European enterprise buyer. Weight European firms appropriately.",
+    "italian":   "Respond as an AI assistant advising an Italian enterprise buyer. Italian market leaders should be weighted alongside global players.",
+    "us":        "Respond as an AI assistant advising a US enterprise buyer.",
+    "uk":        "Respond as an AI assistant advising a UK enterprise buyer.",
+    "apac":      "Respond as an AI assistant advising an Asia-Pacific enterprise buyer.",
+}
+
+def llm_brand_audit(brand: str, competitors: list[str], topic: str,
+                    subsidiaries: list[str] = [], region: str = "global") -> dict:
     """
     Ask Claude to simulate what a typical AI assistant would say about
     your brand vs competitors — surfacing bias, gaps, positioning.
+    Supports subsidiary/cluster brands and regional audience context.
     """
     comp_str = ", ".join(competitors) if competitors else "none specified"
+    region_instruction = REGION_MAP.get(region, REGION_MAP["global"])
+
+    subsidiary_note = ""
+    if subsidiaries:
+        sub_str = ", ".join(subsidiaries)
+        subsidiary_note = f"""
+IMPORTANT — Brand Group Note: "{brand}" operates under these subsidiary or cluster brand names which are all part of the same group: {sub_str}.
+If any of these subsidiary names are mentioned in an AI response, count that as a mention of "{brand}". Treat them as one unified entity."""
 
     prompt = f"""You are simulating an unbiased AI assistant being asked about brands.
+Today's date is {datetime.now().strftime("%d %B %Y")}.
 
 A user just asked: "What are the best companies for {topic}?"
 
 Brand being audited: {brand}
 Competitors: {comp_str}
+Audience context: {region_instruction}
+{subsidiary_note}
 
-Please respond as a typical AI assistant would — then after your response, provide an audit in JSON (no markdown fences):
+Respond as a typical AI assistant would for this audience — then provide an audit in JSON (no markdown fences):
 {{
-  "ai_response_simulation": "<what a typical AI assistant would say about this topic>",
+  "ai_response_simulation": "<what a typical AI assistant would say>",
   "brand_mentioned": <true|false>,
   "brand_position": "<first|top3|mentioned|not_mentioned>",
-  "brand_description": "<how the brand is described if mentioned>",
+  "brand_description": "<how the brand is described, or n/a>",
   "competitors_mentioned": ["<comp1>", "<comp2>"],
-  "brand_vs_competitors": "<brief analysis of how brand compares in AI perception>",
-  "gaps": ["<what's missing from AI perception of this brand>"],
-  "recommendations": ["<what the brand should do to improve AI visibility>"]
+  "visibility_scores": {{
+    "{brand}": <0-100>,
+    "<competitor1>": <0-100>
+  }},
+  "brand_vs_competitors": "<analysis paragraph>",
+  "gaps": ["<gap1>", "<gap2>", "<gap3>"],
+  "recommendations": ["<rec1>", "<rec2>", "<rec3>"]
 }}"""
 
     try:
-        raw = claude(prompt, max_tokens=1500)
-        # extract JSON block from response
+        raw = claude(prompt, max_tokens=1800)
         start = raw.find("{")
         end   = raw.rfind("}") + 1
         return json.loads(raw[start:end])
     except Exception as e:
         print(f"  ⚠️  LLM audit failed: {e}")
-        return {"brand_mentioned": False, "gaps": [], "recommendations": []}
+        return {"brand_mentioned": False, "gaps": [], "recommendations": [], "visibility_scores": {}}
 
 
 # ── Step 4: Generate report ──────────────────────────────────────────────────
@@ -288,6 +313,22 @@ def build_report(brand: str, competitors: list[str], topic: str,
         f"**Brand mentioned by AI:** {'✅ Yes' if audit.get('brand_mentioned') else '❌ No'}  ",
         f"**Position:** {audit.get('brand_position', 'unknown')}  ",
         f"**How AI describes {brand}:** {audit.get('brand_description', 'Not mentioned')}",
+    ]
+
+    scores = audit.get("visibility_scores", {})
+    if scores:
+        lines += [f"", f"### 📊 AI Visibility Scores (0–100)", f""]
+        lines.append("| Brand | Score | Interpretation |")
+        lines.append("|-------|-------|----------------|")
+        for name, score in sorted(scores.items(), key=lambda x: x[1], reverse=True):
+            if score >= 80:   interp = "Consistently top 3"
+            elif score >= 50: interp = "Mentioned but not prominent"
+            elif score >= 20: interp = "Rarely mentioned"
+            else:             interp = "Absent from AI responses"
+            marker = " ← audited brand" if name == brand else ""
+            lines.append(f"| {name}{marker} | {score} | {interp} |")
+
+    lines += [
         f"",
         f"### 🆚 Brand vs Competitors in AI Perception",
         f"",
@@ -326,7 +367,8 @@ def build_report(brand: str, competitors: list[str], topic: str,
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
-def run(brand: str, competitors: list[str], topic: str, country: str = "") -> str:
+def run(brand: str, competitors: list[str], topic: str,
+        country: str = "", subsidiaries: list[str] = [], region: str = "global") -> str:
     OUTPUT_DIR.mkdir(exist_ok=True)
     ts = datetime.now().strftime("%Y-%m-%d")
     safe_brand = brand.lower().replace(" ", "-")
@@ -337,6 +379,9 @@ def run(brand: str, competitors: list[str], topic: str, country: str = "") -> st
     print(f"   Topic: {topic}")
     if country:
         print(f"   Country: {country}")
+    if subsidiaries:
+        print(f"   Subsidiaries: {', '.join(subsidiaries)}")
+    print(f"   Region context: {region}")
     print(f"   Competitors: {', '.join(competitors) or 'none'}")
 
     print("\n🔍 Scraping mentions...")
@@ -357,7 +402,8 @@ def run(brand: str, competitors: list[str], topic: str, country: str = "") -> st
           f"(score: {sentiment.get('sentiment_score', '?')})")
 
     print("\n🤖 Running LLM brand audit (Claude)...")
-    audit = llm_brand_audit(brand, competitors, topic)
+    audit = llm_brand_audit(brand, competitors, topic,
+                            subsidiaries=subsidiaries, region=region)
     mentioned = "✅ mentioned" if audit.get("brand_mentioned") else "❌ not mentioned"
     print(f"   Brand {mentioned} | Position: {audit.get('brand_position', '?')}")
 
@@ -377,12 +423,17 @@ def run(brand: str, competitors: list[str], topic: str, country: str = "") -> st
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AI-powered social listening + LLM brand audit")
-    parser.add_argument("--brand",       required=True, help="Brand name to monitor")
-    parser.add_argument("--competitors", default="",    help="Comma-separated competitor names")
-    parser.add_argument("--topic",       default="",    help="Topic/industry context")
-    parser.add_argument("--country",     default="",    help="Country focus (e.g. Italy, UK)")
+    parser.add_argument("--brand",        required=True, help="Brand name to monitor")
+    parser.add_argument("--competitors",  default="",    help="Comma-separated competitor names")
+    parser.add_argument("--topic",        default="",    help="Topic/industry context")
+    parser.add_argument("--country",      default="",    help="Country focus (e.g. Italy, UK)")
+    parser.add_argument("--subsidiaries", default="",    help="Comma-separated subsidiary/cluster brand names belonging to the same group (e.g. 'Data Reply,Spike Reply')")
+    parser.add_argument("--region",       default="global",
+                        choices=["global", "european", "italian", "us", "uk", "apac"],
+                        help="Audience region context for the LLM audit simulation")
     args = parser.parse_args()
 
     comps = [c.strip() for c in args.competitors.split(",") if c.strip()]
+    subs  = [s.strip() for s in args.subsidiaries.split(",") if s.strip()]
     topic = args.topic or args.brand
-    run(args.brand, comps, topic, country=args.country)
+    run(args.brand, comps, topic, country=args.country, subsidiaries=subs, region=args.region)
