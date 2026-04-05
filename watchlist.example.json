@@ -1,0 +1,35 @@
+{
+  "watchlist": [
+    {
+      "brand": "Adidas",
+      "competitors": ["Nike", "Puma", "New Balance"],
+      "topic": "sportswear",
+      "region": "global",
+      "country": "",
+      "subsidiaries": []
+    },
+    {
+      "brand": "Data Reply",
+      "competitors": ["Accenture", "Deloitte", "IBM"],
+      "topic": "AI consulting enterprise",
+      "region": "european",
+      "country": "UK",
+      "subsidiaries": ["Reply", "Open Reply", "Cluster Reply"]
+    }
+  ],
+  "schedule": {
+    "frequency": "weekly",
+    "day": "monday",
+    "hour": 8
+  },
+  "distribution": {
+    "email": "your@email.com",
+    "save_reports": true,
+    "report_format": ["markdown", "html"]
+  },
+  "adaptive": {
+    "enabled": true,
+    "sentiment_alert_threshold": -0.3,
+    "trend_window_weeks": 4
+  }
+}

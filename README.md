@@ -1,159 +1,159 @@
-# Brand Listener 🎧
+# 🎧 Brand Listener
 
-> AI-powered social listening + LLM brand audit tool — no GPU, no paid APIs required.
+> AI-powered social listening + LLM brand audit tool — no GPU required.
+> Track what people **and** AI models say about your brand. Runs automatically on a schedule.
 
-## What It Does
-
-Two things most tools don't combine:
-
-### 1. Social Listening
-Scrapes Reddit, HackerNews, and arXiv for brand mentions — then uses Claude (AWS Bedrock) to:
-- Analyse overall sentiment (score from −1 to +1)
-- Surface top themes in the conversation
-- Flag urgent PR risks or negative trends
-
-### 2. LLM Brand Audit *(the new frontier)*
-Simulates what an AI assistant would say about your brand when someone asks *"What are the best companies for [topic]?"*
-
-- Is your brand mentioned at all?
-- How is it described vs competitors?
-- What are the AI visibility scores for each brand?
-- What are the perception gaps, and how do you fix them?
-
-This matters because **AI assistants are becoming the new search engine**. If ChatGPT or Claude don't mention your brand, you're invisible to a growing slice of buyers.
+[![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
+[![AWS Bedrock](https://img.shields.io/badge/AI-AWS%20Bedrock-orange)](https://aws.amazon.com/bedrock/)
+[![No GPU](https://img.shields.io/badge/GPU-not%20required-green)]()
 
 ---
 
-## Requirements
+## ✨ Key Features
 
-- Python 3.10+
-- AWS credentials with Bedrock access (Claude Sonnet via `~/.aws/credentials`)
-- No other paid APIs, no GPU
+### 🔄 Automated Weekly Reports
+Set it once. Every Monday (or your chosen schedule), Brand Listener runs automatically — pulling fresh data, generating reports, and emailing them to you. No manual intervention needed.
+
+### 🧠 Adaptive Search (Karpathy-inspired)
+Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch), the tool **learns from previous runs**. Instead of static queries, it blends emerging themes from last week's report into this week's search — chasing the conversations that matter, not just keyword matches.
+
+### 📈 Trend Detection & Alerts
+Week-over-week sentiment comparison. If your brand's sentiment drops significantly, you get an immediate alert — before it becomes a crisis.
+
+### 🔍 Two Data Sources
+- **LinkedIn** — posts, articles, profiles mentioning your brand (via Google Search)
+- **News** — Google News RSS for the freshest press coverage
+
+Plus Reddit and HackerNews for community and developer sentiment.
+
+### 🤖 LLM Brand Audit
+Asks Claude what AI models "think" about your brand vs competitors — surfacing blind spots, AI visibility scores, and recommendations to improve how AI represents your brand.
 
 ---
 
-## Usage
+## 🚀 Quick Start
 
+### 1. Install dependencies
 ```bash
-# Any single brand
-python3 brand_listener.py --brand "Accenture" --topic "IT consulting" --region global
-
-# Brand with subsidiaries (group model)
-python3 brand_listener.py \
-  --brand "Your Group" \
-  --subsidiaries "Sub Brand A,Sub Brand B,Sub Brand C" \
-  --competitors "Competitor1,Competitor2,Competitor3" \
-  --topic "your industry topic" \
-  --region european
-
-# Startup vs big players
-python3 brand_listener.py \
-  --brand "Monzo" \
-  --competitors "HSBC,Barclays,Starling,Revolut" \
-  --topic "digital banking UK" \
-  --region uk
-
-# With country + region context
-python3 brand_listener.py \
-  --brand "Your Brand" \
-  --competitors "CompA,CompB" \
-  --topic "enterprise software" \
-  --country "Germany" \
-  --region european
+pip install boto3
+# AWS credentials must be configured for Bedrock access (us-west-2)
 ```
 
-Reports are saved to `reports/YYYY-MM-DD-brand-name.md` and `reports/YYYY-MM-DD-brand-name.html`
-
----
-
-## CLI Arguments
-
-| Argument | Description | Example |
-|----------|-------------|---------|
-| `--brand` | Brand name to monitor (required) | `"Accenture"` |
-| `--competitors` | Comma-separated competitor names | `"Deloitte,KPMG"` |
-| `--topic` | Industry/topic context | `"IT consulting"` |
-| `--country` | Country focus for scraping | `"Italy"` |
-| `--region` | Audience context for LLM audit | `italian` |
-| `--subsidiaries` | Sub-brands belonging to the same group | `"Brand A,Brand B"` |
-
-**Region options:** `global` · `european` · `italian` · `us` · `uk` · `apac`
-
----
-
-## Architecture
-
-```
-brand_listener.py      — main tool (scraping, sentiment, LLM audit, reports)
-linkedin_scraper.py    — LinkedIn public mention scraper via Google
-report_html.py         — self-contained HTML report generator
-dashboard.py           — Streamlit interactive dashboard
-```
-
-```
-brand_listener.py
-├── scrape_reddit()        → Reddit public JSON API (no auth)
-├── scrape_hackernews()    → HN Algolia API (no auth)
-├── scrape_arxiv()         → arXiv API (no auth)
-├── scrape_linkedin()      → via linkedin_scraper.py
-├── analyse_sentiment()    → Claude via AWS Bedrock
-├── llm_brand_audit()      → Claude simulates AI brand perception
-└── build_report()         → Markdown + HTML reports
-```
-
----
-
-## Dashboard
-
+### 2. Configure your watchlist
 ```bash
-streamlit run dashboard.py
+cp watchlist.example.json watchlist.json
+# Edit watchlist.json — add your brands, competitors, schedule, and email
 ```
 
-Opens at **http://localhost:8501** — interactive UI with charts, LinkedIn breakdown, LLM audit panel, and report download.
-
----
-
-## Sample Output
-
+### 3. Run once (manual)
+```bash
+python3 brand_listener.py --brand "Adidas" --competitors "Nike,Puma" --topic "sportswear"
 ```
-🎧 Brand Listener — Adidas
-   Topic: sportswear athletic apparel
-   Region context: global
 
-🔍 Scraping mentions...
-   Reddit: 30 posts
-   HackerNews: 30 posts
-   arXiv: 10 papers
-   Total: 70 mentions
+### 4. Run all brands from watchlist
+```bash
+python3 scheduler.py --run-now
+```
 
-🧠 Analysing sentiment (Claude)...
-   Overall: neutral (score: 0.15)
-
-🤖 Running LLM brand audit (Claude)...
-   Brand ✅ mentioned | Position: top3
-
-✅ Markdown report saved: reports/2026-04-05-adidas.md
-✅ HTML report saved:     reports/2026-04-05-adidas.html
+### 5. Run as daemon (automated weekly)
+```bash
+python3 scheduler.py --daemon
+# Fires every Monday at 08:00 by default
+# Or add to cron: 0 8 * * 1 python3 /path/to/scheduler.py --run-now
 ```
 
 ---
 
-## Roadmap
+## 📋 watchlist.json Configuration
 
-- [ ] Twitter/X scraping (via xurl)
-- [ ] Scheduled weekly reports via cron
-- [ ] Slack/Telegram alerts for sentiment spikes
-- [ ] Multi-LLM audit (ChatGPT + Gemini + Claude comparison)
-- [ ] Historical trend tracking
+```json
+{
+  "watchlist": [
+    {
+      "brand": "Your Brand",
+      "competitors": ["Competitor A", "Competitor B"],
+      "topic": "your industry",
+      "region": "global",
+      "country": "",
+      "subsidiaries": []
+    }
+  ],
+  "schedule": {
+    "frequency": "weekly",
+    "day": "monday",
+    "hour": 8
+  },
+  "distribution": {
+    "email": "you@email.com",
+    "save_reports": true
+  },
+  "adaptive": {
+    "enabled": true,
+    "sentiment_alert_threshold": -0.3
+  }
+}
+```
+
+**Region options:** `global` | `european` | `italian` | `us` | `uk` | `apac`
+
+**Email setup** (optional): Set env vars `SMTP_USER`, `SMTP_PASS`, `SMTP_HOST` (default: Gmail)
 
 ---
 
-## References
+## 📊 What's in a Report
 
-- [Auditing Preferences for Brands in LLMs](https://arxiv.org/abs/2603.18300) — March 2026
-- [SocialED — Social Event Detection](https://github.com/RingBDStack/SocialED)
-- [AI Watchman — LLM Content Monitoring](https://arxiv.org/abs/2510.01255)
+Each report includes:
+
+- **Social Listening Summary** — overall sentiment, score, source breakdown
+- **Top Themes** — what people are actually talking about
+- **Alerts** — PR risks, negative trends
+- **LLM Brand Audit** — AI visibility scores vs competitors, gaps, recommendations
+- **Top Mentions** — highest-scoring posts with links
+
+Reports saved as `.md` and `.html` in the `reports/` folder.
 
 ---
 
-*MIT License — contributions welcome*
+## 🧠 Adaptive Loop (How It Works)
+
+```
+Week 1: Search "Adidas sportswear"
+        → Top themes: ["sustainability", "Yeezy controversy"]
+
+Week 2: Search "Adidas sportswear sustainability Yeezy controversy"  ← adapted!
+        → Chases the conversations that are gaining traction
+
+Week 3: Sentiment drops -0.4 → ALERT fired automatically
+```
+
+This is the core insight from Karpathy's autoresearch: **static queries go stale**. The tool should evolve its understanding week by week.
+
+---
+
+## 📁 Project Structure
+
+```
+brand-listener/
+├── brand_listener.py      # Core engine (scraping + sentiment + LLM audit)
+├── scheduler.py           # Automated scheduler + adaptive loop + trend detection
+├── linkedin_scraper.py    # LinkedIn mention scraper via Google Search
+├── dashboard.py           # Streamlit dashboard for interactive exploration
+├── report_html.py         # HTML report generator
+├── watchlist.json         # Your config (gitignored — copy from example)
+├── watchlist.example.json # Example config to get started
+└── reports/               # Generated reports (markdown + HTML)
+    └── history.json       # Run history for trend tracking
+```
+
+---
+
+## ⚙️ Requirements
+
+- Python 3.11+
+- AWS account with Bedrock access (Claude Sonnet via `us-west-2`)
+- No GPU required
+- No paid third-party APIs required for basic use
+
+---
+
+*Built by [Kumaresa Perumal](https://github.com/NinjaDS) · Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch)*

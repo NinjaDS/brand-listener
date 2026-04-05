@@ -1,0 +1,28 @@
+{
+  "Adidas": [
+    {
+      "date": "2026-04-05",
+      "report": "reports/2026-04-05-adidas.md",
+      "sentiment_score": 0.42,
+      "overall_sentiment": "positive",
+      "top_themes": [
+        "footwear comfort and sizing",
+        "replica and counterfeit products",
+        "nostalgia and retro/heritage products"
+      ],
+      "trend_alerts": []
+    },
+    {
+      "date": "2026-04-05",
+      "report": "reports/2026-04-05-adidas.md",
+      "sentiment_score": 0.42,
+      "overall_sentiment": "positive",
+      "top_themes": [
+        "Sneaker culture and lifestyle appeal (Campus 00s, Samba, SL 72, Runblaze)",
+        "Collaborations and limited editions (Pharrell x Adistar, Adidas x Thug Club, Jeremy Scott)",
+        "Replica and counterfeit market activity (FashionReps, Repsneakers, ReplicLeague, FrenchReps)"
+      ],
+      "trend_alerts": []
+    }
+  ]
+}

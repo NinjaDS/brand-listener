@@ -381,6 +381,14 @@ def build_report(brand: str, competitors: list[str], topic: str,
 # ── Main ─────────────────────────────────────────────────────────────────────
 def run(brand: str, competitors: list[str], topic: str,
         country: str = "", subsidiaries: list[str] = [], region: str = "global") -> str:
+    """CLI entrypoint — returns report path."""
+    path, _, _ = run_full(brand, competitors, topic, country, subsidiaries, region)
+    return path
+
+
+def run_full(brand: str, competitors: list[str], topic: str,
+             country: str = "", subsidiaries: list[str] = [], region: str = "global") -> tuple[str, dict, dict]:
+    """Full run — returns (report_path, sentiment_dict, audit_dict) for scheduler use."""
     OUTPUT_DIR.mkdir(exist_ok=True)
     ts = datetime.now().strftime("%Y-%m-%d")
     safe_brand = brand.lower().replace(" ", "-")
@@ -434,7 +442,7 @@ def run(brand: str, competitors: list[str], topic: str,
         html_file.write_text(html, encoding="utf-8")
         print(f"✅ HTML report saved:     {html_file}")
 
-    return str(output_file)
+    return str(output_file), sentiment, audit
 
 
 if __name__ == "__main__":
