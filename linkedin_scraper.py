@@ -86,16 +86,18 @@ def _google_scrape(query: str, num: int = 10) -> list[dict]:
         return []
 
 
-def scrape_linkedin(brand: str, max_results: int = 20) -> list[dict]:
+def scrape_linkedin(brand: str, max_results: int = 20, country: str = "") -> list[dict]:
     """
     Search LinkedIn public content for brand mentions via Google.
     Covers: posts, articles, company pages, people profiles.
+    Optional country filter narrows results geographically.
     """
+    country_suffix = f' "{country}"' if country else ""
     queries = [
-        f'site:linkedin.com/posts "{brand}"',
-        f'site:linkedin.com/pulse "{brand}"',
+        f'site:linkedin.com/posts "{brand}"{country_suffix}',
+        f'site:linkedin.com/pulse "{brand}"{country_suffix}',
         f'site:linkedin.com/company "{brand}"',
-        f'site:linkedin.com/in "{brand}"',
+        f'site:linkedin.com/in "{brand}"{country_suffix}',
     ]
 
     all_results = []

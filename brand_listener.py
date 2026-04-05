@@ -32,6 +32,13 @@ try:
 except ImportError:
     LINKEDIN_AVAILABLE = False
 
+# ── HTML report (optional import)
+try:
+    from report_html import build_html_report as _build_html
+    HTML_AVAILABLE = True
+except ImportError:
+    HTML_AVAILABLE = False
+
 # ── Config ───────────────────────────────────────────────────────────────────
 BEDROCK_MODEL  = "us.anthropic.claude-sonnet-4-6"
 REGION         = "us-west-2"
@@ -61,10 +68,11 @@ def claude(prompt: str, max_tokens: int = 2000) -> str:
 
 
 # ── Step 1: Scrape social mentions ───────────────────────────────────────────
-def scrape_reddit(brand: str) -> list[dict]:
-    """Search Reddit for brand mentions (public JSON API — no auth needed)."""
+def scrape_reddit(brand: str, country: str = "") -> list[dict]:
+    """Search Reddit for brand mentions, optionally filtered by country."""
+    query = f"{brand} {country}".strip()
     params = urllib.parse.urlencode({
-        "q": brand, "sort": "new", "limit": MAX_MENTIONS, "type": "link"
+        "q": query, "sort": "new", "limit": MAX_MENTIONS, "type": "link"
     })
     try:
         data = fetch_json(f"{REDDIT_API}?{params}")
@@ -86,9 +94,10 @@ def scrape_reddit(brand: str) -> list[dict]:
         return []
 
 
-def scrape_hackernews(brand: str) -> list[dict]:
+def scrape_hackernews(brand: str, country: str = "") -> list[dict]:
     """Search HackerNews via Algolia API."""
-    params = urllib.parse.urlencode({"query": brand, "hitsPerPage": MAX_MENTIONS})
+    query = f"{brand} {country}".strip()
+    params = urllib.parse.urlencode({"query": query, "hitsPerPage": MAX_MENTIONS})
     try:
         data = fetch_json(f"{HN_API}?{params}")
         posts = []
@@ -218,7 +227,8 @@ Please respond as a typical AI assistant would — then after your response, pro
 
 # ── Step 4: Generate report ──────────────────────────────────────────────────
 def build_report(brand: str, competitors: list[str], topic: str,
-                 mentions: list[dict], sentiment: dict, audit: dict) -> str:
+                 mentions: list[dict], sentiment: dict, audit: dict,
+                 country: str = "") -> str:
     date     = datetime.now().strftime("%d %B %Y")
     ts       = datetime.now().strftime("%Y-%m-%d")
     total    = len(mentions)
@@ -316,26 +326,29 @@ def build_report(brand: str, competitors: list[str], topic: str,
 
 
 # ── Main ─────────────────────────────────────────────────────────────────────
-def run(brand: str, competitors: list[str], topic: str) -> str:
+def run(brand: str, competitors: list[str], topic: str, country: str = "") -> str:
     OUTPUT_DIR.mkdir(exist_ok=True)
     ts = datetime.now().strftime("%Y-%m-%d")
     safe_brand = brand.lower().replace(" ", "-")
-    output_file = OUTPUT_DIR / f"{ts}-{safe_brand}.md"
+    country_tag = f"-{country.lower().replace(' ','-')}" if country else ""
+    output_file = OUTPUT_DIR / f"{ts}-{safe_brand}{country_tag}.md"
 
     print(f"\n🎧 Brand Listener — {brand}")
     print(f"   Topic: {topic}")
+    if country:
+        print(f"   Country: {country}")
     print(f"   Competitors: {', '.join(competitors) or 'none'}")
 
     print("\n🔍 Scraping mentions...")
     mentions = []
-    mentions += scrape_reddit(brand)
+    mentions += scrape_reddit(brand, country)
     print(f"   Reddit: {len([m for m in mentions if m['source']=='reddit'])} posts")
-    mentions += scrape_hackernews(brand)
+    mentions += scrape_hackernews(brand, country)
     print(f"   HackerNews: {len([m for m in mentions if m['source']=='hackernews'])} posts")
     mentions += scrape_arxiv(brand, topic)
     print(f"   arXiv: {len([m for m in mentions if m['source']=='arxiv'])} papers")
     if LINKEDIN_AVAILABLE:
-        mentions += _scrape_linkedin(brand)
+        mentions += _scrape_linkedin(brand, country=country)
     print(f"   Total: {len(mentions)} mentions")
 
     print("\n🧠 Analysing sentiment (Claude)...")
@@ -349,9 +362,16 @@ def run(brand: str, competitors: list[str], topic: str) -> str:
     print(f"   Brand {mentioned} | Position: {audit.get('brand_position', '?')}")
 
     print("\n📝 Building report...")
-    report = build_report(brand, competitors, topic, mentions, sentiment, audit)
+    report = build_report(brand, competitors, topic, mentions, sentiment, audit, country)
     output_file.write_text(report, encoding="utf-8")
-    print(f"\n✅ Report saved: {output_file}")
+    print(f"\n✅ Markdown report saved: {output_file}")
+
+    if HTML_AVAILABLE:
+        html_file = output_file.with_suffix(".html")
+        html = _build_html(brand, competitors, topic, mentions, sentiment, audit, country)
+        html_file.write_text(html, encoding="utf-8")
+        print(f"✅ HTML report saved:     {html_file}")
+
     return str(output_file)
 
 
@@ -360,8 +380,9 @@ if __name__ == "__main__":
     parser.add_argument("--brand",       required=True, help="Brand name to monitor")
     parser.add_argument("--competitors", default="",    help="Comma-separated competitor names")
     parser.add_argument("--topic",       default="",    help="Topic/industry context")
+    parser.add_argument("--country",     default="",    help="Country focus (e.g. Italy, UK)")
     args = parser.parse_args()
 
     comps = [c.strip() for c in args.competitors.split(",") if c.strip()]
     topic = args.topic or args.brand
-    run(args.brand, comps, topic)
+    run(args.brand, comps, topic, country=args.country)

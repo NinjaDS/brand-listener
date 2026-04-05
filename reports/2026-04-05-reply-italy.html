@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Report — Reply</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f2f5; color: #2c3e50; }
+    .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+               color: white; padding: 40px 48px; }
+    .header h1 { font-size: 2em; margin-bottom: 8px; }
+    .header .meta { opacity: 0.7; font-size: 0.9em; margin-top: 8px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 32px; }
+    .kpi { background: white; border-radius: 12px; padding: 20px; text-align: center;
+             box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .kpi .value { font-size: 1.8em; font-weight: 700; color: #2c3e50; }
+    .kpi .label { font-size: 0.8em; color: #7f8c8d; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card h2 { font-size: 1.1em; margin-bottom: 16px; color: #2c3e50;
+                 border-bottom: 2px solid #f0f2f5; padding-bottom: 12px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+    th { background: #f8f9fa; padding: 10px 12px; text-align: left;
+           font-weight: 600; color: #7f8c8d; text-transform: uppercase;
+           font-size: 0.75em; letter-spacing: 0.5px; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f0f2f5; }
+    tr:hover td { background: #fafafa; }
+    .summary-box { background: #f8f9fa; border-left: 4px solid #3498db;
+                     padding: 16px; border-radius: 0 8px 8px 0; line-height: 1.6; }
+    .alert-box { background: #fef0f0; border-left: 4px solid #e74c3c;
+                   padding: 12px 16px; border-radius: 0 8px 8px 0;
+                   margin-bottom: 8px; color: #c0392b; }
+    .audit-mentioned { font-size: 1.4em; font-weight: 700; margin-bottom: 8px; }
+    .gap-list { list-style: none; }
+    .gap-list li { padding: 8px 0; border-bottom: 1px solid #f0f2f5;
+                     padding-left: 20px; position: relative; }
+    .gap-list li::before { content: '⚠'; position: absolute; left: 0; }
+    .rec-list { list-style: none; }
+    .rec-list li { padding: 8px 0; border-bottom: 1px solid #f0f2f5;
+                     padding-left: 20px; position: relative; color: #27ae60; }
+    .rec-list li::before { content: '✅'; position: absolute; left: 0; }
+    .gauge-wrap { text-align: center; padding: 8px 0; }
+    .score-big { font-size: 3em; font-weight: 800; color: #f39c12; }
+    .ai-sim { background: #f8f9fa; border-radius: 8px; padding: 16px;
+                font-style: italic; line-height: 1.6; color: #555; font-size: 0.95em; }
+    .footer { text-align: center; color: #aaa; font-size: 0.8em; padding: 32px; }
+    .linkedin-badge { background: #0077b5; color: white; padding: 2px 8px;
+                        border-radius: 4px; font-size: 0.75em; }
+    @media(max-width: 768px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎧 Brand Listening Report</h1>
+  <h2 style="font-size:1.6em;margin-top:4px;opacity:0.9">Reply</h2>
+  <div class="meta">
+    Topic: IT consulting technology services &nbsp;|&nbsp;
+    Country: Italy &nbsp;|&nbsp;
+    Competitors: Accenture, Deloitte, Engineering, NTT Data, Capgemini &nbsp;|&nbsp;
+    Generated: 05 April 2026, 11:24
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI Row -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="value">70</div>
+      <div class="label">Total Mentions</div>
+    </div>
+    <div class="kpi">
+      <div class="value" style="color:#f39c12">NEUTRAL</div>
+      <div class="label">Sentiment</div>
+    </div>
+    <div class="kpi">
+      <div class="value" style="color:#f39c12">-0.05</div>
+      <div class="label">Sentiment Score</div>
+    </div>
+    <div class="kpi">
+      <div class="value">❌</div>
+      <div class="label">AI Visibility</div>
+    </div>
+    <div class="kpi">
+      <div class="value" style="font-size:1.2em">Not Mentioned</div>
+      <div class="label">AI Position</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+
+    <!-- Sentiment Summary -->
+    <div class="card">
+      <h2>💬 Social Listening Summary</h2>
+      <div class="gauge-wrap">
+        <div class="score-big">-0.05</div>
+        <div style="color:#f39c12;font-weight:600;margin-top:4px">NEUTRAL</div>
+        <div style="color:#aaa;font-size:0.8em;margin-top:2px">−1 very negative &nbsp;→&nbsp; +1 very positive</div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="display:flex;gap:16px;justify-content:center;margin-bottom:16px">
+          <span>✅ Positive: <strong>5</strong></span>
+          <span>😐 Neutral: <strong>13</strong></span>
+          <span>❌ Negative: <strong>7</strong></span>
+        </div>
+      </div>
+      <div class="summary-box">The mentions are a highly diverse and loosely connected set of Reddit posts, with Italy appearing as a recurring geographic reference across topics including language learning, study abroad, immigration, and consumer complaints. There is no strong brand-specific signal for an entity called 'Reply' in these mentions, suggesting these may be ambient or misattributed results. The most notable negative signals involve consumer electronics brands (CableMod and NZXT) facing product and warranty disputes from Italy-based users, which could indicate broader EU consumer protection friction.</div>
+      <div style='margin-top:16px'><strong>Top Themes:</strong><br><br><span style="background:#8e44ad;color:white;padding:3px 10px;border-radius:12px;font-size:0.8em;font-weight:600">Italy/Italian context</span> <span style="background:#8e44ad;color:white;padding:3px 10px;border-radius:12px;font-size:0.8em;font-weight:600">personal advice and relationships</span> <span style="background:#8e44ad;color:white;padding:3px 10px;border-radius:12px;font-size:0.8em;font-weight:600">consumer complaints and product issues</span></div>
+      <div style='margin-top:16px'><div class="alert-box">🚨 Two posts (reddit/GamersNexus and reddit/pcmasterrace) describe a destroyed RTX 5090 due to a recalled CableMod adapter, with the user based in Italy reporting no resolution and post removal — potential consumer rights and product liability PR risk for CableMod</div><div class="alert-box">🚨 NZXT warranty refusal post highlights EU consumer protection concerns, with support directing user to seek Amazon refund instead of honoring warranty — reputational risk for NZXT in European markets</div></div>
+    </div>
+
+    <!-- Mentions by Source -->
+    <div class="card">
+      <h2>📊 Mentions by Source</h2>
+      <table>
+        <thead><tr><th>Source</th><th>Count</th><th>Volume</th></tr></thead>
+        <tbody><tr><td>Reddit</td><td>30</td><td><div style="background:#3498db;height:12px;border-radius:6px;width:128px"></div></td></tr><tr><td>Hackernews</td><td>30</td><td><div style="background:#3498db;height:12px;border-radius:6px;width:128px"></div></td></tr><tr><td>Arxiv</td><td>10</td><td><div style="background:#3498db;height:12px;border-radius:6px;width:42px"></div></td></tr></tbody>
+      </table>
+      
+
+      <!-- Meta table -->
+      <div style="margin-top:20px">
+        <table>
+          <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Brand</td><td><strong>Reply</strong></td></tr>
+            <tr><td>Topic</td><td>IT consulting technology services</td></tr>
+            <tr><td>Country Focus</td><td><strong>Italy</strong></td></tr>
+            <tr><td>Competitors</td><td>Accenture, Deloitte, Engineering, NTT Data, Capgemini</td></tr>
+            <tr><td>Generated</td><td>05 April 2026, 11:24</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- LLM Brand Audit -->
+  <div class="card">
+    <h2>🤖 LLM Brand Audit — <em style="font-weight:400;font-size:0.9em">What does AI say about Reply?</em></h2>
+    <p style="color:#7f8c8d;margin-bottom:20px;font-size:0.9em">
+      Prompt simulated: <em>"What are the best companies for IT consulting technology services?"</em>
+    </p>
+    <div class="three-col">
+      <div>
+        <div class="audit-mentioned">❌ Not Mentioned</div>
+        <div style="color:#7f8c8d;margin-bottom:12px">Position: <strong>not_mentioned</strong></div>
+        <p><strong>How AI describes Reply:</strong></p>
+        <div class="summary-box" style="margin-top:8px">Reply was not mentioned in the AI-generated response.</div>
+        <p style="margin-top:16px"><strong>Brand vs Competitors:</strong></p>
+        <div class="summary-box" style="margin-top:8px">Reply is completely absent from AI perception in this category, while all listed competitors — Accenture, Deloitte, Capgemini, NTT Data, and Engineering — are mentioned. This suggests Reply has very low AI visibility despite potentially being a legitimate player in IT consulting. Competitors benefit from stronger global brand signals, analyst mentions, and broader content footprints.</div>
+      </div>
+      <div>
+        <p><strong>🕳️ Perception Gaps:</strong></p>
+        <ul class="gap-list" style="margin-top:8px"><li>Reply is not recognized by AI models as a top IT consulting firm</li><li>Insufficient public content, case studies, or analyst coverage that AI training data would capture</li><li>Lack of association with key IT consulting keywords such as digital transformation, cloud, and cybersecurity</li><li>Limited global brand recognition compared to competitors like Accenture or Capgemini</li><li>No strong thought leadership content indexed that would influence AI model training</li></ul>
+      </div>
+      <div>
+        <p><strong>✅ Recommendations:</strong></p>
+        <ul class="rec-list" style="margin-top:8px"><li>Increase publication of high-quality thought leadership content on IT consulting topics to improve AI training data presence</li><li>Pursue coverage in major technology and business publications such as Forbes, Gartner, and IDC reports</li><li>Optimize website and content with keywords aligned to top IT consulting search queries</li><li>Develop and promote case studies highlighting large-scale IT consulting successes</li><li>Engage in analyst relations programs with Gartner, Forrester, and IDC to gain inclusion in market reports</li><li>Build a stronger Wikipedia and knowledge graph presence to improve structured AI data recognition</li><li>Leverage LinkedIn and industry forums to associate the Reply brand with IT consulting expertise</li></ul>
+      </div>
+    </div>
+    <div style="margin-top:24px">
+      <p style="margin-bottom:8px"><strong>🤖 AI Response Simulation:</strong></p>
+      <div class="ai-sim">A typical AI assistant would list globally recognized IT consulting giants such as Accenture, Deloitte, Capgemini, NTT Data, Cognizant, Infosys, and TCS. These brands dominate AI-generated responses due to their global brand recognition, extensive online content, analyst coverage, and large-scale operations.</div>
+    </div>
+  </div>
+
+  <!-- Top Mentions Table -->
+  <div class="card">
+    <h2>📋 Top Mentions</h2>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th><th>Type</th><th>Date</th><th>Title</th><th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>BlueskySkeets</td>
+          <td>2026-04-01</td>
+          <td><a href="https://reddit.com/r/BlueskySkeets/comments/1s977hg/its_that_damn_fifa_peace_prize/" target="_blank" style="color:#3498db">It’s that damn FIFA Peace Prize</a></td>
+          <td style="text-align:center">864</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>soccer</td>
+          <td>2026-04-02</td>
+          <td><a href="https://reddit.com/r/soccer/comments/1saj3lm/gazzetta_sportiva_the_baggio_dossier_what_was_in/" target="_blank" style="color:#3498db">[Gazzetta Sportiva] The Baggio Dossier: What was in Roby's 900-page plan to revi…</a></td>
+          <td style="text-align:center">304</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>pcmasterrace</td>
+          <td>2026-04-01</td>
+          <td><a href="https://reddit.com/r/pcmasterrace/comments/1s9pqag/cablemod_removed_my_post_from_rcablemod_their/" target="_blank" style="color:#3498db">CableMod removed my post from r/cablemod. Their recalled adapter destroyed my RT…</a></td>
+          <td style="text-align:center">265</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff6600;font-weight:600">HACKERNEWS</span></td>
+          <td>HackerNews</td>
+          <td>2024-01-30</td>
+          <td><a href="https://news.ycombinator.com/item?id=39188760" target="_blank" style="color:#3498db">Launch HN: Univerbal (YC W23) – Language learning with a conversational AI tutor</a></td>
+          <td style="text-align:center">145</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>GamersNexus</td>
+          <td>2026-04-01</td>
+          <td><a href="https://reddit.com/r/GamersNexus/comments/1s9psfx/cablemod_removed_my_post_from_rcablemod_their/" target="_blank" style="color:#3498db">CableMod removed my post from r/cablemod. Their recalled adapter destroyed my RT…</a></td>
+          <td style="text-align:center">126</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>italiabad</td>
+          <td>2026-04-04</td>
+          <td><a href="https://reddit.com/r/italiabad/comments/1sc3255/tanti_auguri_di_estinzione_prepasquali/" target="_blank" style="color:#3498db">Tanti auguri di estinzione pre-pasquali</a></td>
+          <td style="text-align:center">55</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>AITAH</td>
+          <td>2026-03-31</td>
+          <td><a href="https://reddit.com/r/AITAH/comments/1s8x9vk/aitah_for_wanting_to_end_my_fwb_situation_after/" target="_blank" style="color:#3498db">AITAH for wanting to end my FWB situation after she tested me while I was sick t…</a></td>
+          <td style="text-align:center">45</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>soccercirclejerk</td>
+          <td>2026-03-31</td>
+          <td><a href="https://reddit.com/r/soccercirclejerk/comments/1s91e94/aged_like_fine_milk/" target="_blank" style="color:#3498db">Aged like fine milk</a></td>
+          <td style="text-align:center">44</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>Caldruki</td>
+          <td>2026-03-31</td>
+          <td><a href="https://reddit.com/r/Caldruki/comments/1s8yd25/im_22_and_my_gf_is_3/" target="_blank" style="color:#3498db">I’m 22 and my gf is 3</a></td>
+          <td style="text-align:center">34</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>italiabad</td>
+          <td>2026-04-02</td>
+          <td><a href="https://reddit.com/r/italiabad/comments/1sacqji/immigrato_risponde_a_come_si_trova_in_italia/" target="_blank" style="color:#3498db">Immigrato risponde a come si trova in Italia, viene corretto</a></td>
+          <td style="text-align:center">26</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>FeministsCallItOut</td>
+          <td>2026-04-02</td>
+          <td><a href="https://reddit.com/r/FeministsCallItOut/comments/1sas4kx/internalized_misogyny_from_my_elderly_mother/" target="_blank" style="color:#3498db">Internalized Misogyny from my elderly mother...</a></td>
+          <td style="text-align:center">19</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>SnarkySlaughter</td>
+          <td>2026-04-04</td>
+          <td><a href="https://reddit.com/r/SnarkySlaughter/comments/1sbw1ar/did_romania_even_exist_in_the_bible/" target="_blank" style="color:#3498db">Did romania even exist in the Bible??</a></td>
+          <td style="text-align:center">18</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff6600;font-weight:600">HACKERNEWS</span></td>
+          <td>HackerNews</td>
+          <td>2025-04-07</td>
+          <td><a href="https://news.ycombinator.com/item?id=43615756" target="_blank" style="color:#3498db">Tell HN: ChatGPT is giving me other people's conversation when uploading files</a></td>
+          <td style="text-align:center">10</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>TeenagersITA_spotted</td>
+          <td>2026-04-01</td>
+          <td><a href="https://reddit.com/r/TeenagersITA_spotted/comments/1s9dern/napoli_palle_sudate_italiameme/" target="_blank" style="color:#3498db">Napoli palle sudate Italiameme</a></td>
+          <td style="text-align:center">8</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>SalafiCentral</td>
+          <td>2026-04-03</td>
+          <td><a href="https://reddit.com/r/SalafiCentral/comments/1sbfp4t/a_letter_from_sheikh_ibn_baz_to_a_muslim_living/" target="_blank" style="color:#3498db">A Letter from Sheikh Ibn Baz to a muslim living in the lands of disbelief</a></td>
+          <td style="text-align:center">7</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>italy</td>
+          <td>2026-03-31</td>
+          <td><a href="https://reddit.com/r/italy/comments/1s8jnoq/is_it_inpolite_to_ask_for_a_discount_in_italy/" target="_blank" style="color:#3498db">Is it inpolite to ask for a discount in italy?</a></td>
+          <td style="text-align:center">6</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>resinprinting</td>
+          <td>2026-03-31</td>
+          <td><a href="https://reddit.com/r/resinprinting/comments/1s8phq9/when_is_the_best_time_to_buy_a_3d_printer/" target="_blank" style="color:#3498db">When is the best time to buy a 3D printer ?</a></td>
+          <td style="text-align:center">4</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff6600;font-weight:600">HACKERNEWS</span></td>
+          <td>HackerNews</td>
+          <td>2013-12-17</td>
+          <td><a href="https://news.ycombinator.com/item?id=6918979" target="_blank" style="color:#3498db">The story of gOrge</a></td>
+          <td style="text-align:center">4</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>language_exchange</td>
+          <td>2026-04-04</td>
+          <td><a href="https://reddit.com/r/language_exchange/comments/1scd6hy/offering_arabic_native_or_english_fluent_seeking/" target="_blank" style="color:#3498db">Offering: Arabic (native), or English (fluent) | Seeking: Italian</a></td>
+          <td style="text-align:center">3</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>relationship_advice</td>
+          <td>2026-04-03</td>
+          <td><a href="https://reddit.com/r/relationship_advice/comments/1sb675m/i_18f_am_unhappy_in_my_relationship_with_my_bf/" target="_blank" style="color:#3498db">I 18F am unhappy in my relationship with my bf 19M but are these valid reasons t…</a></td>
+          <td style="text-align:center">3</td>
+        </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Generated by <a href="https://github.com/NinjaDS/brand-listener" style="color:#3498db">brand-listener</a>
+  — built by <a href="https://linkedin.com/in/perumal-kumaresa-57053a5b/" style="color:#3498db">Kumaresa Perumal</a>
+  &nbsp;·&nbsp; Maintained with help from Suresh 🙏
+</div>
+
+</body>
+</html>
