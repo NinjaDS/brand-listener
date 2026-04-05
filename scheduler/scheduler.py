@@ -33,7 +33,11 @@ from pathlib import Path
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-import brand_listener
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
+from core import brand_listener
 
 WATCHLIST_FILE = Path("watchlist.json")
 HISTORY_FILE   = Path("reports/history.json")

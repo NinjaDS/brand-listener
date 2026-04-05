@@ -27,27 +27,47 @@ import boto3
 
 # ── LinkedIn scraper (optional import)
 try:
-    from linkedin_scraper import scrape_linkedin as _scrape_linkedin
+    from scrapers.linkedin_scraper import scrape_linkedin as _scrape_linkedin
     LINKEDIN_AVAILABLE = True
 except ImportError:
-    LINKEDIN_AVAILABLE = False
+    try:
+        from linkedin_scraper import scrape_linkedin as _scrape_linkedin
+        LINKEDIN_AVAILABLE = True
+    except ImportError:
+        LINKEDIN_AVAILABLE = False
 
 # ── Meta scraper (optional import)
 try:
-    from meta_scraper import scrape_meta as _scrape_meta
+    from scrapers.meta_scraper import scrape_meta as _scrape_meta
     META_AVAILABLE = True
 except ImportError:
-    META_AVAILABLE = False
+    try:
+        from meta_scraper import scrape_meta as _scrape_meta
+        META_AVAILABLE = True
+    except ImportError:
+        META_AVAILABLE = False
 
 # ── TikTok scraper (optional import)
 try:
-    from tiktok_scraper import scrape_tiktok as _scrape_tiktok
+    from scrapers.tiktok_scraper import scrape_tiktok as _scrape_tiktok
     TIKTOK_AVAILABLE = True
 except ImportError:
-    TIKTOK_AVAILABLE = False
+    try:
+        from tiktok_scraper import scrape_tiktok as _scrape_tiktok
+        TIKTOK_AVAILABLE = True
+    except ImportError:
+        TIKTOK_AVAILABLE = False
 
 # ── HTML report (optional import)
 try:
+    from core.report_html import build_html_report as _build_html
+    HTML_AVAILABLE = True
+except ImportError:
+    try:
+        from report_html import build_html_report as _build_html
+        HTML_AVAILABLE = True
+    except ImportError:
+        HTML_AVAILABLE = False
     from report_html import build_html_report as _build_html
     HTML_AVAILABLE = True
 except ImportError:

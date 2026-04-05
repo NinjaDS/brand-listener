@@ -47,19 +47,19 @@ cp watchlist.example.json watchlist.json
 
 ### 3. Run once (manual)
 ```bash
-python3 brand_listener.py --brand "Adidas" --competitors "Nike,Puma" --topic "sportswear"
+python3 main.py --brand "Adidas" --competitors "Nike,Puma" --topic "sportswear"
 ```
 
 ### 4. Run all brands from watchlist
 ```bash
-python3 scheduler.py --run-now
+python3 main.py --schedule --run-now
 ```
 
 ### 5. Run as daemon (automated weekly)
 ```bash
-python3 scheduler.py --daemon
+python3 main.py --schedule --daemon
 # Fires every Monday at 08:00 by default
-# Or add to cron: 0 8 * * 1 python3 /path/to/scheduler.py --run-now
+# Or add to cron:  0 8 * * 1  python3 /path/to/main.py --schedule --run-now
 ```
 
 ---
@@ -134,18 +134,27 @@ This is the core insight from Karpathy's autoresearch: **static queries go stale
 
 ```
 brand-listener/
-├── brand_listener.py      # Core engine (scraping + sentiment + LLM audit)
-├── scheduler.py           # Automated scheduler + adaptive loop + trend detection
-├── linkedin_scraper.py    # LinkedIn mention scraper via Google Search
-├── meta_scraper.py        # Facebook + Instagram mention scraper via Google Search
-├── tiktok_scraper.py      # TikTok video + creator scraper via Google Search
-├── dashboard.py           # Streamlit dashboard for interactive exploration
-├── report_html.py         # HTML report generator
-├── watchlist.json         # Your config (gitignored — copy from example)
-├── watchlist.example.json # Example config to get started
-└── reports/               # Generated reports (markdown + HTML)
-    └── history.json       # Run history for trend tracking
+├── main.py                    # ← Single entrypoint (start here)
+├── watchlist.example.json     # ← Copy this to watchlist.json and edit
+├── core/
+│   ├── brand_listener.py      # Core engine: scraping + sentiment + LLM audit
+│   ├── report_html.py         # HTML report generator
+│   └── dashboard.py           # Streamlit dashboard (interactive exploration)
+├── scrapers/
+│   ├── linkedin_scraper.py    # LinkedIn posts + articles (Google Search)
+│   ├── meta_scraper.py        # Facebook + Instagram (DuckDuckGo)
+│   └── tiktok_scraper.py      # TikTok videos + creators (DuckDuckGo)
+├── scheduler/
+│   └── scheduler.py           # Automated scheduler + adaptive loop + trend detection
+├── docs/
+│   └── ARCHITECTURE.md        # Full system architecture diagram
+└── reports/                   # Generated reports (auto-created)
+    ├── history.json           # Run history for adaptive loop + trend tracking
+    ├── YYYY-MM-DD-brand.md    # Markdown reports
+    └── YYYY-MM-DD-brand.html  # HTML reports
 ```
+
+📄 [View full architecture diagram](docs/ARCHITECTURE.md)
 
 ---
 
