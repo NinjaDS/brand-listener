@@ -32,6 +32,20 @@ try:
 except ImportError:
     LINKEDIN_AVAILABLE = False
 
+# ── Meta scraper (optional import)
+try:
+    from meta_scraper import scrape_meta as _scrape_meta
+    META_AVAILABLE = True
+except ImportError:
+    META_AVAILABLE = False
+
+# ── TikTok scraper (optional import)
+try:
+    from tiktok_scraper import scrape_tiktok as _scrape_tiktok
+    TIKTOK_AVAILABLE = True
+except ImportError:
+    TIKTOK_AVAILABLE = False
+
 # ── HTML report (optional import)
 try:
     from report_html import build_html_report as _build_html
@@ -418,6 +432,16 @@ def run_full(brand: str, competitors: list[str], topic: str,
     else:
         from linkedin_scraper import scrape_linkedin as _scrape_linkedin_direct
         mentions += _scrape_linkedin_direct(brand, country=country)
+    if META_AVAILABLE:
+        mentions += _scrape_meta(brand, country=country)
+    else:
+        from meta_scraper import scrape_meta as _scrape_meta_direct
+        mentions += _scrape_meta_direct(brand, country=country)
+    if TIKTOK_AVAILABLE:
+        mentions += _scrape_tiktok(brand, country=country)
+    else:
+        from tiktok_scraper import scrape_tiktok as _scrape_tiktok_direct
+        mentions += _scrape_tiktok_direct(brand, country=country)
     print(f"   Total: {len(mentions)} mentions")
 
     print("\n🧠 Analysing sentiment (Claude)...")

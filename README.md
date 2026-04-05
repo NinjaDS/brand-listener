@@ -137,6 +137,8 @@ brand-listener/
 ├── brand_listener.py      # Core engine (scraping + sentiment + LLM audit)
 ├── scheduler.py           # Automated scheduler + adaptive loop + trend detection
 ├── linkedin_scraper.py    # LinkedIn mention scraper via Google Search
+├── meta_scraper.py        # Facebook + Instagram mention scraper via Google Search
+├── tiktok_scraper.py      # TikTok video + creator scraper via Google Search
 ├── dashboard.py           # Streamlit dashboard for interactive exploration
 ├── report_html.py         # HTML report generator
 ├── watchlist.json         # Your config (gitignored — copy from example)
@@ -153,6 +155,11 @@ brand-listener/
 - AWS account with Bedrock access (Claude Sonnet via `us-west-2`)
 - No GPU required
 - No paid third-party APIs required for basic use
+
+> **Note on Google rate limits:** LinkedIn, Meta, and TikTok scrapers use Google Search.
+> If you run reports frequently, set `GOOGLE_CSE_ID` + `GOOGLE_API_KEY` env vars
+> to use the [Google Custom Search API](https://developers.google.com/custom-search/v1/overview)
+> (100 free queries/day). For weekly scheduled runs, the free scraper works fine.
 
 ---
 
