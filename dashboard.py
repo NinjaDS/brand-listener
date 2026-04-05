@@ -7,7 +7,7 @@ Run:
     streamlit run dashboard.py
 
 Or with a specific brand pre-loaded:
-    streamlit run dashboard.py -- --brand "Data Reply" --topic "AI consulting"
+    streamlit run dashboard.py -- --brand "Accenture" --topic "IT consulting"
 """
 
 import json
@@ -38,7 +38,7 @@ with st.sidebar:
     st.caption("AI-powered social listening + LLM brand audit")
     st.divider()
 
-    brand = st.text_input("Brand name", value="Data Reply", placeholder="e.g. Data Reply")
+    brand = st.text_input("Brand name", value="", placeholder="e.g. Accenture, Monzo, Tesla")
     competitors_raw = st.text_input(
         "Competitors (comma-separated)",
         value="Accenture, Deloitte, KPMG",
@@ -51,7 +51,7 @@ with st.sidebar:
 
     st.divider()
     st.caption("Powered by AWS Bedrock (Claude)")
-    st.caption("[github.com/NinjaDS/brand-listener](https://github.com/NinjaDS/brand-listener)")
+    st.caption("[github.com/brand-listener](https://github.com/NinjaDS/brand-listener)")
 
 # ── Load existing reports ────────────────────────────────────────────────────
 reports_dir = Path(__file__).parent / "reports"

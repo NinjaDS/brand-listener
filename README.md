@@ -13,12 +13,12 @@ Scrapes Reddit, HackerNews, and arXiv for brand mentions — then uses Claude (A
 - Flag urgent PR risks or negative trends
 
 ### 2. LLM Brand Audit *(the new frontier)*
-Ask Claude to simulate what an AI assistant would say about your brand when someone asks *"What are the best companies for [topic]?"*
+Simulates what an AI assistant would say about your brand when someone asks *"What are the best companies for [topic]?"*
 
 - Is your brand mentioned at all?
 - How is it described vs competitors?
-- What are the perception gaps?
-- What should you do to improve AI visibility?
+- What are the AI visibility scores for each brand?
+- What are the perception gaps, and how do you fix them?
 
 This matters because **AI assistants are becoming the new search engine**. If ChatGPT or Claude don't mention your brand, you're invisible to a growing slice of buyers.
 
@@ -35,71 +35,116 @@ This matters because **AI assistants are becoming the new search engine**. If Ch
 ## Usage
 
 ```bash
-# Basic — just a brand
-python3 brand_listener.py --brand "Data Reply" --topic "AI consulting"
+# Any single brand
+python3 brand_listener.py --brand "Accenture" --topic "IT consulting" --region global
 
-# With competitors
+# Brand with subsidiaries (group model)
 python3 brand_listener.py \
-  --brand "Data Reply" \
-  --competitors "Accenture,Deloitte,McKinsey" \
-  --topic "AI consulting enterprise"
+  --brand "Your Group" \
+  --subsidiaries "Sub Brand A,Sub Brand B,Sub Brand C" \
+  --competitors "Competitor1,Competitor2,Competitor3" \
+  --topic "your industry topic" \
+  --region european
 
-# For your startup
+# Startup vs big players
 python3 brand_listener.py \
-  --brand "Synthetic Audience Labs" \
-  --competitors "Nielsen,YouGov,Qualtrics" \
-  --topic "synthetic audience marketing research"
+  --brand "Monzo" \
+  --competitors "HSBC,Barclays,Starling,Revolut" \
+  --topic "digital banking UK" \
+  --region uk
+
+# With country + region context
+python3 brand_listener.py \
+  --brand "Your Brand" \
+  --competitors "CompA,CompB" \
+  --topic "enterprise software" \
+  --country "Germany" \
+  --region european
 ```
 
-Reports are saved to `reports/YYYY-MM-DD-brand-name.md`
+Reports are saved to `reports/YYYY-MM-DD-brand-name.md` and `reports/YYYY-MM-DD-brand-name.html`
+
+---
+
+## CLI Arguments
+
+| Argument | Description | Example |
+|----------|-------------|---------|
+| `--brand` | Brand name to monitor (required) | `"Accenture"` |
+| `--competitors` | Comma-separated competitor names | `"Deloitte,KPMG"` |
+| `--topic` | Industry/topic context | `"IT consulting"` |
+| `--country` | Country focus for scraping | `"Italy"` |
+| `--region` | Audience context for LLM audit | `italian` |
+| `--subsidiaries` | Sub-brands belonging to the same group | `"Brand A,Brand B"` |
+
+**Region options:** `global` · `european` · `italian` · `us` · `uk` · `apac`
 
 ---
 
 ## Architecture
 
 ```
+brand_listener.py      — main tool (scraping, sentiment, LLM audit, reports)
+linkedin_scraper.py    — LinkedIn public mention scraper via Google
+report_html.py         — self-contained HTML report generator
+dashboard.py           — Streamlit interactive dashboard
+```
+
+```
 brand_listener.py
 ├── scrape_reddit()        → Reddit public JSON API (no auth)
 ├── scrape_hackernews()    → HN Algolia API (no auth)
 ├── scrape_arxiv()         → arXiv API (no auth)
+├── scrape_linkedin()      → via linkedin_scraper.py
 ├── analyse_sentiment()    → Claude via AWS Bedrock
 ├── llm_brand_audit()      → Claude simulates AI brand perception
-└── build_report()         → Markdown report with all findings
+└── build_report()         → Markdown + HTML reports
 ```
+
+---
+
+## Dashboard
+
+```bash
+streamlit run dashboard.py
+```
+
+Opens at **http://localhost:8501** — interactive UI with charts, LinkedIn breakdown, LLM audit panel, and report download.
 
 ---
 
 ## Sample Output
 
 ```
-🎧 Brand Listener — Data Reply
-   Topic: AI consulting enterprise
+🎧 Brand Listener — Accenture
+   Topic: IT consulting
+   Region context: global
 
 🔍 Scraping mentions...
-   Reddit: 12 posts
-   HackerNews: 8 posts
+   Reddit: 30 posts
+   HackerNews: 28 posts
    arXiv: 10 papers
-   Total: 30 mentions
+   Total: 68 mentions
 
 🧠 Analysing sentiment (Claude)...
-   Overall: mixed (score: 0.12)
+   Overall: positive (score: 0.42)
 
 🤖 Running LLM brand audit (Claude)...
    Brand ✅ mentioned | Position: top3
 
-✅ Report saved: reports/2026-04-04-data-reply.md
+✅ Markdown report saved: reports/2026-04-05-accenture.md
+✅ HTML report saved:     reports/2026-04-05-accenture.html
 ```
 
 ---
 
 ## Roadmap
 
-- [ ] Add Twitter/X scraping (via xurl)
-- [ ] Add LinkedIn mentions
+- [ ] Twitter/X scraping (via xurl)
 - [ ] Scheduled weekly reports via cron
 - [ ] Slack/Telegram alerts for sentiment spikes
 - [ ] Multi-LLM audit (ChatGPT + Gemini + Claude comparison)
-- [ ] Dashboard UI
+- [ ] Historical trend tracking
 
 ---
 
@@ -111,4 +156,4 @@ brand_listener.py
 
 ---
 
-*Built by [Kumaresa Perumal](https://linkedin.com/in/perumal-kumaresa-57053a5b/) · Maintained with help from Suresh 🙏*
+*MIT License — contributions welcome*
