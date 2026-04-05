@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-04-05",
+    "report": "reports/curlsmith/2026-04-05-curlsmith-uk.md",
+    "sentiment_score": 0.2,
+    "overall_sentiment": "mixed",
+    "top_themes": [
+      "UK market presence and availability",
+      "Curly hair type compatibility concerns (fine, low porosity, wavy)",
+      "Brand consideration and comparison with competitors"
+    ],
+    "trend_alerts": []
+  }
+]

@@ -40,8 +40,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from core import brand_listener
 
 WATCHLIST_FILE = Path("watchlist.json")
-HISTORY_FILE   = Path("reports/history.json")
 OUTPUT_DIR     = Path("reports")
+
+
+def history_file(brand: str) -> Path:
+    safe = brand.lower().replace(" ", "-").replace(".", "").replace("/", "")
+    d = OUTPUT_DIR / safe
+    d.mkdir(parents=True, exist_ok=True)
+    return d / "history.json"
 
 
 # ── Watchlist config ─────────────────────────────────────────────────────────
@@ -54,27 +60,32 @@ def load_watchlist() -> dict:
 
 # ── History & trend tracking ─────────────────────────────────────────────────
 def load_history() -> dict:
-    if HISTORY_FILE.exists():
-        return json.loads(HISTORY_FILE.read_text())
     return {}
 
 
+def load_brand_history(brand: str) -> list:
+    f = history_file(brand)
+    if f.exists():
+        return json.loads(f.read_text())
+    return []
+
+
 def save_history(history: dict):
-    OUTPUT_DIR.mkdir(exist_ok=True)
-    HISTORY_FILE.write_text(json.dumps(history, indent=2))
+    """Save per-brand history files."""
+    for brand, runs in history.items():
+        f = history_file(brand)
+        f.write_text(json.dumps(runs, indent=2))
 
 
 def get_prior_run(history: dict, brand: str) -> dict | None:
-    """Return the most recent run for a brand."""
     runs = history.get(brand, [])
     return runs[-1] if runs else None
 
 
 def record_run(history: dict, brand: str, result: dict):
     if brand not in history:
-        history[brand] = []
+        history[brand] = load_brand_history(brand)
     history[brand].append(result)
-    # keep last 12 weeks
     history[brand] = history[brand][-12:]
 
 

@@ -83,6 +83,14 @@ MAX_MENTIONS   = 30   # max posts to fetch per source
 OUTPUT_DIR     = Path("reports")
 
 
+def brand_output_dir(brand: str) -> Path:
+    """Per-brand subdirectory under reports/."""
+    safe = brand.lower().replace(" ", "-").replace(".", "").replace("/", "")
+    d = OUTPUT_DIR / safe
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
 # ── Helpers ──────────────────────────────────────────────────────────────────
 def fetch_json(url: str, headers: dict = None) -> dict:
     req = urllib.request.Request(url, headers=headers or {"User-Agent": "brand-listener/1.0"})
@@ -423,11 +431,11 @@ def run(brand: str, competitors: list[str], topic: str,
 def run_full(brand: str, competitors: list[str], topic: str,
              country: str = "", subsidiaries: list[str] = [], region: str = "global") -> tuple[str, dict, dict]:
     """Full run — returns (report_path, sentiment_dict, audit_dict) for scheduler use."""
-    OUTPUT_DIR.mkdir(exist_ok=True)
+    brand_dir = brand_output_dir(brand)
     ts = datetime.now().strftime("%Y-%m-%d")
-    safe_brand = brand.lower().replace(" ", "-")
+    safe_brand = brand.lower().replace(" ", "-").replace(".", "").replace("/", "")
     country_tag = f"-{country.lower().replace(' ','-')}" if country else ""
-    output_file = OUTPUT_DIR / f"{ts}-{safe_brand}{country_tag}.md"
+    output_file = brand_dir / f"{ts}-{safe_brand}{country_tag}.md"
 
     print(f"\n🎧 Brand Listener — {brand}")
     print(f"   Topic: {topic}")

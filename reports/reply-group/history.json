@@ -1,0 +1,14 @@
+[
+  {
+    "date": "2026-04-05",
+    "report": "reports/reply-group/2026-04-05-reply-group-uk.md",
+    "sentiment_score": 0.0,
+    "overall_sentiment": "neutral",
+    "top_themes": [
+      "irrelevant content",
+      "spam",
+      "adult content"
+    ],
+    "trend_alerts": []
+  }
+]
