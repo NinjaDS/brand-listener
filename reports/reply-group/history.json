@@ -10,5 +10,17 @@
       "adult content"
     ],
     "trend_alerts": []
+  },
+  {
+    "date": "2026-04-06",
+    "report": "reports/reply-group/2026-04-06-reply-group-uk.md",
+    "sentiment_score": 0.0,
+    "overall_sentiment": "neutral",
+    "top_themes": [
+      "unrelated content",
+      "no brand mentions",
+      "data noise"
+    ],
+    "trend_alerts": []
   }
 ]

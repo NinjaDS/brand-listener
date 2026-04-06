@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand Report — Reply Group</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f0f2f5; color: #2c3e50; }
+    .header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+               color: white; padding: 40px 48px; }
+    .header h1 { font-size: 2em; margin-bottom: 8px; }
+    .header .meta { opacity: 0.7; font-size: 0.9em; margin-top: 8px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 32px; }
+    .kpi { background: white; border-radius: 12px; padding: 20px; text-align: center;
+             box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .kpi .value { font-size: 1.8em; font-weight: 700; color: #2c3e50; }
+    .kpi .label { font-size: 0.8em; color: #7f8c8d; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .card h2 { font-size: 1.1em; margin-bottom: 16px; color: #2c3e50;
+                 border-bottom: 2px solid #f0f2f5; padding-bottom: 12px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9em; }
+    th { background: #f8f9fa; padding: 10px 12px; text-align: left;
+           font-weight: 600; color: #7f8c8d; text-transform: uppercase;
+           font-size: 0.75em; letter-spacing: 0.5px; }
+    td { padding: 10px 12px; border-bottom: 1px solid #f0f2f5; }
+    tr:hover td { background: #fafafa; }
+    .summary-box { background: #f8f9fa; border-left: 4px solid #3498db;
+                     padding: 16px; border-radius: 0 8px 8px 0; line-height: 1.6; }
+    .alert-box { background: #fef0f0; border-left: 4px solid #e74c3c;
+                   padding: 12px 16px; border-radius: 0 8px 8px 0;
+                   margin-bottom: 8px; color: #c0392b; }
+    .audit-mentioned { font-size: 1.4em; font-weight: 700; margin-bottom: 8px; }
+    .gap-list { list-style: none; }
+    .gap-list li { padding: 8px 0; border-bottom: 1px solid #f0f2f5;
+                     padding-left: 20px; position: relative; }
+    .gap-list li::before { content: '⚠'; position: absolute; left: 0; }
+    .rec-list { list-style: none; }
+    .rec-list li { padding: 8px 0; border-bottom: 1px solid #f0f2f5;
+                     padding-left: 20px; position: relative; color: #27ae60; }
+    .rec-list li::before { content: '✅'; position: absolute; left: 0; }
+    .gauge-wrap { text-align: center; padding: 8px 0; }
+    .score-big { font-size: 3em; font-weight: 800; color: #f39c12; }
+    .ai-sim { background: #f8f9fa; border-radius: 8px; padding: 16px;
+                font-style: italic; line-height: 1.6; color: #555; font-size: 0.95em; }
+    .footer { text-align: center; color: #aaa; font-size: 0.8em; padding: 32px; }
+    .linkedin-badge { background: #0077b5; color: white; padding: 2px 8px;
+                        border-radius: 4px; font-size: 0.75em; }
+    @media(max-width: 768px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎧 Brand Listening Report</h1>
+  <h2 style="font-size:1.6em;margin-top:4px;opacity:0.9">Reply Group</h2>
+  <div class="meta">
+    Topic: AI consulting enterprise UK &nbsp;|&nbsp;
+    Country: UK &nbsp;|&nbsp;
+    Competitors: Accenture, Deloitte, Capgemini, IBM &nbsp;|&nbsp;
+    Generated: 06 April 2026, 08:04
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- KPI Row -->
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="value">90</div>
+      <div class="label">Total Mentions</div>
+    </div>
+    <div class="kpi">
+      <div class="value" style="color:#f39c12">NEUTRAL</div>
+      <div class="label">Sentiment</div>
+    </div>
+    <div class="kpi">
+      <div class="value" style="color:#f39c12">+0.00</div>
+      <div class="label">Sentiment Score</div>
+    </div>
+    <div class="kpi">
+      <div class="value">❌</div>
+      <div class="label">AI Visibility</div>
+    </div>
+    <div class="kpi">
+      <div class="value" style="font-size:1.2em">Not Mentioned</div>
+      <div class="label">AI Position</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+
+    <!-- Sentiment Summary -->
+    <div class="card">
+      <h2>💬 Social Listening Summary</h2>
+      <div class="gauge-wrap">
+        <div class="score-big">+0.00</div>
+        <div style="color:#f39c12;font-weight:600;margin-top:4px">NEUTRAL</div>
+        <div style="color:#aaa;font-size:0.8em;margin-top:2px">−1 very negative &nbsp;→&nbsp; +1 very positive</div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="display:flex;gap:16px;justify-content:center;margin-bottom:16px">
+          <span>✅ Positive: <strong>0</strong></span>
+          <span>😐 Neutral: <strong>25</strong></span>
+          <span>❌ Negative: <strong>0</strong></span>
+        </div>
+      </div>
+      <div class="summary-box">None of the 25 Reddit mentions provided contain any reference to 'Reply Group' as a brand, company, or entity. The posts span completely unrelated topics including personal relationships, Alcoholics Anonymous book promotion, gaming, politics, and university placements. This dataset does not constitute valid brand intelligence for Reply Group and analysis cannot be meaningfully performed. A data collection audit is strongly recommended before proceeding.</div>
+      <div style='margin-top:16px'><strong>Top Themes:</strong><br><br><span style="background:#8e44ad;color:white;padding:3px 10px;border-radius:12px;font-size:0.8em;font-weight:600">unrelated content</span> <span style="background:#8e44ad;color:white;padding:3px 10px;border-radius:12px;font-size:0.8em;font-weight:600">no brand mentions</span> <span style="background:#8e44ad;color:white;padding:3px 10px;border-radius:12px;font-size:0.8em;font-weight:600">data noise</span></div>
+      <div style='margin-top:16px'><div class="alert-box">🚨 CRITICAL: Zero mentions of 'Reply Group' detected across all 25 submitted posts. All content appears entirely unrelated to the brand. Possible data pipeline error, incorrect query parameters, or keyword mismatch. Do not use this dataset for brand intelligence conclusions.</div></div>
+    </div>
+
+    <!-- Mentions by Source -->
+    <div class="card">
+      <h2>📊 Mentions by Source</h2>
+      <table>
+        <thead><tr><th>Source</th><th>Count</th><th>Volume</th></tr></thead>
+        <tbody><tr><td>Reddit</td><td>30</td><td><div style="background:#3498db;height:12px;border-radius:6px;width:100px"></div></td></tr><tr><td>Hackernews</td><td>30</td><td><div style="background:#3498db;height:12px;border-radius:6px;width:100px"></div></td></tr><tr><td>News</td><td>30</td><td><div style="background:#3498db;height:12px;border-radius:6px;width:100px"></div></td></tr></tbody>
+      </table>
+      
+
+      <!-- Meta table -->
+      <div style="margin-top:20px">
+        <table>
+          <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Brand</td><td><strong>Reply Group</strong></td></tr>
+            <tr><td>Topic</td><td>AI consulting enterprise UK</td></tr>
+            <tr><td>Country Focus</td><td><strong>UK</strong></td></tr>
+            <tr><td>Competitors</td><td>Accenture, Deloitte, Capgemini, IBM</td></tr>
+            <tr><td>Generated</td><td>06 April 2026, 08:04</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- LLM Brand Audit -->
+  <div class="card">
+    <h2>🤖 LLM Brand Audit — <em style="font-weight:400;font-size:0.9em">What does AI say about Reply Group?</em></h2>
+    <p style="color:#7f8c8d;margin-bottom:20px;font-size:0.9em">
+      Prompt simulated: <em>"What are the best companies for AI consulting enterprise UK?"</em>
+    </p>
+    <div class="three-col">
+      <div>
+        <div class="audit-mentioned">❌ Not Mentioned</div>
+        <div style="color:#7f8c8d;margin-bottom:12px">Position: <strong>not_mentioned</strong></div>
+        <p><strong>How AI describes Reply Group:</strong></p>
+        <div class="summary-box" style="margin-top:8px">n/a</div>
+        <p style="margin-top:16px"><strong>Brand vs Competitors:</strong></p>
+        <div class="summary-box" style="margin-top:8px">Reply Group is entirely absent from the simulated AI response, while all four audited competitors — Accenture, Deloitte, Capgemini, and IBM — are prominently featured, with three of them ranked in the top four positions. The response privileges large, globally recognised consultancies with broad brand recognition and extensive marketing footprints. Reply Group, despite having meaningful UK AI consulting capability through subsidiaries such as Data Reply and Machine Learning Reply, does not appear to have sufficient AI-indexed visibility to surface in generative AI responses for this query type. The gap is significant: competitors score between 82–92 on visibility while Reply Group scores 0, indicating a near-total absence from AI-generated consideration sets for UK enterprise buyers.</div>
+      </div>
+      <div>
+        <p><strong>🕳️ Perception Gaps:</strong></p>
+        <ul class="gap-list" style="margin-top:8px"><li>Reply Group and its subsidiaries (Data Reply, Machine Learning Reply, etc.) lack sufficient indexed presence in the sources and training signals that inform AI assistant responses for UK enterprise AI consulting queries</li><li>The group's brand architecture — operating under multiple subsidiary names — likely dilutes consolidated authority signals, making it harder for AI models to surface the group as a unified, credible alternative to monolithic consultancies</li><li>There is an absence of high-authority third-party validation (analyst reports, awards, case studies on major platforms) that would cause AI models to associate Reply Group with top-tier UK enterprise AI consulting recommendations</li></ul>
+      </div>
+      <div>
+        <p><strong>✅ Recommendations:</strong></p>
+        <ul class="rec-list" style="margin-top:8px"><li>Invest in consolidated thought leadership content under a unified 'Reply Group' or 'Reply AI Consulting' umbrella that explicitly targets UK enterprise AI consulting keywords — this content should appear on high-authority domains (LinkedIn, industry publications, GOV.UK procurement frameworks) to improve AI training signal quality</li><li>Pursue inclusion in analyst and advisor rankings that AI models commonly cite — such as Gartner Magic Quadrant, Forrester Wave, or IDC MarketScape for AI services — as these structured, frequently cited sources have outsized influence on AI-generated recommendations</li><li>Develop prominent UK-specific case studies and press coverage that link Reply Group (and subsidiaries) directly to measurable enterprise AI outcomes, ensuring that brand name, capability, and geography co-occur consistently across multiple authoritative sources to build retrieval relevance</li></ul>
+      </div>
+    </div>
+    <div style="margin-top:24px">
+      <p style="margin-bottom:8px"><strong>🤖 AI Response Simulation:</strong></p>
+      <div class="ai-sim">For AI consulting at the enterprise level in the UK, here are some of the most highly regarded companies to consider:
+
+1. **Accenture** – One of the most prominent players in enterprise AI consulting globally, with a strong UK presence. Their AI and data practice offers end-to-end transformation services, from strategy through to implementation, with deep industry specialisation across financial services, retail, and public sector.
+
+2. **IBM** – IBM Consulting (formerly IBM Global Business Services) brings decades of enterprise technology experience and a strong AI portfolio anchored around IBM Watson and newer generative AI offerings. They have significant UK delivery capacity and strong credentials in regulated industries.
+
+3. **Deloitte** – Deloitte's AI & Data practice is one of the most respected in the UK market. They combine strategic advisory with technical delivery and have invested heavily in generative AI capabilities. Particularly strong for large-scale transformation programmes.
+
+4. **Capgemini** – Capgemini has a well-established AI and data engineering practice in the UK, with particular strength in cloud-native AI delivery, often partnering with hyperscalers like Microsoft Azure and Google Cloud. Their UK engineering hub provides strong delivery capability.
+
+5. **McKinsey & Company (QuantumBlack)** – McKinsey's AI division, QuantumBlack, is headquartered in London and is highly regarded for AI strategy and advanced analytics at the enterprise level, particularly for complex, data-rich environments.
+
+Other notable mentions include **KPMG** (strong AI governance and risk advisory), **PwC** (growing AI practice with responsible AI focus), and **Infosys** (competitive on delivery cost with growing UK AI credentials).
+
+When selecting a partner, consider factors such as their sector-specific experience, depth of technical AI/ML talent in the UK, ability to deliver at scale, and track record with similar enterprises.</div>
+    </div>
+  </div>
+
+  <!-- Top Mentions Table -->
+  <div class="card">
+    <h2>📋 Top Mentions</h2>
+    <div style="overflow-x:auto">
+      <table>
+        <thead>
+          <tr>
+            <th>Source</th><th>Type</th><th>Date</th><th>Title</th><th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>Philippines</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/Philippines/comments/1sdq1fr/denied_to_onboard_my_flight_due_to_no_hiv_medical/" target="_blank" style="color:#3498db">Denied to onboard my flight due to no HIV medical certificate</a></td>
+          <td style="text-align:center">81</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>LudwigAhgren</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/LudwigAhgren/comments/1sdqziw/the_chinese_dare_program_must_be_bonkers_lmao/" target="_blank" style="color:#3498db">The Chinese DARE program must be bonkers lmao</a></td>
+          <td style="text-align:center">28</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff6600;font-weight:600">HACKERNEWS</span></td>
+          <td>HackerNews</td>
+          <td>2022-11-23</td>
+          <td><a href="https://news.ycombinator.com/item?id=33724592" target="_blank" style="color:#3498db">Ask HN: Would you like to join a mob programming group?</a></td>
+          <td style="text-align:center">27</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>Vindictabrown</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/Vindictabrown/comments/1sdqvop/kinda_sick_of_seeing_hate_comments_from_fellow/" target="_blank" style="color:#3498db">kinda sick of seeing hate comments from fellow Indians whenever an Indian actres…</a></td>
+          <td style="text-align:center">11</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>newfoundland</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/newfoundland/comments/1sdp2lu/friendship_in_the_city_i_am_looking_for_is_anyone/" target="_blank" style="color:#3498db">Friendship in the city I am looking for.  Is anyone else searching for more frie…</a></td>
+          <td style="text-align:center">9</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>StJohnsNL</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/StJohnsNL/comments/1sdp2hv/friendship_in_the_city_i_am_looking_for_is_anyone/" target="_blank" style="color:#3498db">Friendship in the city I am looking for.  Is anyone else searching for more frie…</a></td>
+          <td style="text-align:center">9</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>kiituniversity</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/kiituniversity/comments/1sdq4yp/reality_of_ecselectronics_and_computer_science/" target="_blank" style="color:#3498db">Reality of ECS(Electronics and computer science) placements at KIIT – limited te…</a></td>
+          <td style="text-align:center">8</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>jjsquad300</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/jjsquad300/comments/1sdpo0h/yikes_shes_becoming_famous/" target="_blank" style="color:#3498db">Yikes she’s becoming FAMOUS!</a></td>
+          <td style="text-align:center">7</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>foundpharloomians</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/foundpharloomians/comments/1sdpsxo/okay_then/" target="_blank" style="color:#3498db">Okay then..</a></td>
+          <td style="text-align:center">4</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>AIIncomeLab</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/AIIncomeLab/comments/1sdr9gk/i_tried_making_money_with_ai_for_60_days_heres/" target="_blank" style="color:#3498db">I tried making money with AI for 60 days. Here's what actually happened</a></td>
+          <td style="text-align:center">3</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>TeenagersITA</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/TeenagersITA/comments/1sdqjnr/ho_spedito_una_cartolina_in_antattica/" target="_blank" style="color:#3498db">HO SPEDITO UNA CARTOLINA IN ANTATTICA🇦🇶</a></td>
+          <td style="text-align:center">3</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>micro_saas</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/micro_saas/comments/1sdrfi7/if_i_started_salesrobot_from_scratch_today_heres/" target="_blank" style="color:#3498db">If I started SalesRobot from scratch today, here's exactly how I'd hit $1M ARR i…</a></td>
+          <td style="text-align:center">2</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>pinoy</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/pinoy/comments/1sdq3lh/denied_to_onboard_my_flight_due_to_no_hiv_medical/" target="_blank" style="color:#3498db">Denied to onboard my flight due to no HIV medical certificate</a></td>
+          <td style="text-align:center">2</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>facebook</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/facebook/comments/1sdprlj/are_other_people_annoyed_by_the_group_setup_in/" target="_blank" style="color:#3498db">Are other people annoyed by the group setup in Facebook? Why can't I just commen…</a></td>
+          <td style="text-align:center">2</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>MakeNewFriendsHere</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/MakeNewFriendsHere/comments/1sdrmik/m25uk_looking_for_serious_lifelong_friendships/" target="_blank" style="color:#3498db">M25-UK looking for serious lifelong friendships</a></td>
+          <td style="text-align:center">1</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>nzpolitics</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/nzpolitics/comments/1sdrm98/have_nz_first_just_introduced_a_bill_that_legally/" target="_blank" style="color:#3498db">Have NZ First just introduced a bill that legally defines a woman as...everyone?</a></td>
+          <td style="text-align:center">1</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>Advice</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/Advice/comments/1sdrj6i/advice_on_what_i_should_do_concerning_a_boy/" target="_blank" style="color:#3498db">Advice on what I should do concerning a boy... :(</a></td>
+          <td style="text-align:center">1</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>GeorgiesPodium</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/GeorgiesPodium/comments/1sdrha4/list_of_quant_pgmseventscontests_etc_for_students/" target="_blank" style="color:#3498db">List of Quant pgms/events/contests etc. for students</a></td>
+          <td style="text-align:center">1</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>EvolsiayTulip</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/EvolsiayTulip/comments/1sdrg1k/alcoholics_anonymous/" target="_blank" style="color:#3498db">Alcoholics Anonymous</a></td>
+          <td style="text-align:center">1</td>
+        </tr>
+        <tr>
+          <td><span style="color:#ff4500;font-weight:600">REDDIT</span></td>
+          <td>EvolsiayTulip</td>
+          <td>2026-04-06</td>
+          <td><a href="https://reddit.com/r/EvolsiayTulip/comments/1sdrew8/what_is_alcoholics_anonymous/" target="_blank" style="color:#3498db">What is Alcoholics Anonymous  ?</a></td>
+          <td style="text-align:center">1</td>
+        </tr></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  Generated by <a href="https://github.com/NinjaDS/brand-listener" style="color:#3498db">brand-listener</a> — MIT License
+</div>
+
+</body>
+</html>

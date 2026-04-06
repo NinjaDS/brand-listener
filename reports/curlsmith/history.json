@@ -10,5 +10,17 @@
       "Brand consideration and comparison with competitors"
     ],
     "trend_alerts": []
+  },
+  {
+    "date": "2026-04-06",
+    "report": "reports/curlsmith/2026-04-06-curlsmith-uk.md",
+    "sentiment_score": 0.15,
+    "overall_sentiment": "neutral",
+    "top_themes": [
+      "UK market presence and availability",
+      "Product performance for fine and wavy/curly hair types",
+      "Comparison with competitor brands like OnlyCurls, DevaCurl, and Fudge"
+    ],
+    "trend_alerts": []
   }
 ]
