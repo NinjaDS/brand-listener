@@ -202,4 +202,32 @@ curlshoppe: is a Toronto black-owned brand I've been using for years now and the
 
 ---
 
+## Brand Positioning Summary
+
+See the full positioning deep-dive: [brand_positioning_report.md](brand_positioning_report.md)
+
+### Perceptual Map
+![Perceptual Map](charts/perceptual_map.png)
+
+### Attribute Scorecard vs Competitors
+![Attribute Scorecard](charts/attribute_scorecard.png)
+
+### Top Brand Associations (from Reddit)
+| Association | Strength |
+|-------------|----------|
+| Moisture & Hydration | Strong (37%) |
+| Damage Repair / Bond | Moderate (21%) |
+| Curl Definition / Hold | Moderate (16%) |
+| Lightweight Feel | Moderate (15%) |
+| Price / Value | Moderate (13%) |
+| Formula Change Concern | Weak but vocal (6%) |
+
+### Closest Competitor: Innersense
+Highest substitution risk — near-identical positioning on clean ingredients + moisture + premium price. Post-acquisition, Innersense is winning the trust comparison on Reddit.
+
+### Recommended Positioning
+> *"The curl expert that actually works for real life — not just salon days."*
+
+---
+
 *Data from Reddit public API — no personal data collected. Comments from public posts only.*
