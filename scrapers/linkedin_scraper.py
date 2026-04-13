@@ -30,22 +30,28 @@ def scrape_linkedin(brand: str, max_results: int = 10, country: str = "UK") -> l
         return []
 
     try:
-        from linkdapi import Linkdapi  # type: ignore
+        from linkdapi import LinkdAPI  # type: ignore
     except ImportError:
         logger.warning("linkdapi package not installed — skipping LinkedIn scrape")
         return []
 
-    client = Linkdapi(api_key)
+    client = LinkdAPI(api_key)
     posts = []
 
     # Search posts
     try:
         search_keyword = brand
         logger.info(f"Searching LinkedIn posts for: {search_keyword}")
-        raw_posts = client.search_posts(keyword=search_keyword, sort_by="date_posted")
+        raw_response = client.search_posts(keyword=search_keyword, sort_by="date_posted")
         time.sleep(3)
+        if isinstance(raw_response, dict) and raw_response.get("success"):
+            raw_posts = raw_response.get("data", {}).get("posts", [])
+        elif isinstance(raw_response, list):
+            raw_posts = raw_response
+        else:
+            raw_posts = []
 
-        for post in (raw_posts or [])[:max_results]:
+        for post in raw_posts[:max_results]:
             try:
                 engagements = post.get("engagements", {}) or {}
                 likes = engagements.get("totalReactions", 0) or 0

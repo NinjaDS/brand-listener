@@ -21,6 +21,94 @@
       },
       "completed_at": "2026-04-13T13:13:44Z",
       "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/lands-end/report_20260413_131344.md"
+    },
+    {
+      "id": "curlsmith-1776086073",
+      "brand": "Curlsmith",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:14:33Z",
+      "metadata": {
+        "keyword": "Curlsmith hair"
+      },
+      "completed_at": "2026-04-13T13:15:16Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/curlsmith/report_20260413_131516.md"
+    },
+    {
+      "id": "lands-end-1776086116",
+      "brand": "Lands' End",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:15:16Z",
+      "metadata": {
+        "keyword": "Lands End clothing"
+      },
+      "completed_at": "2026-04-13T13:15:52Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/lands-end/report_20260413_131552.md"
+    },
+    {
+      "id": "curlsmith-1776086172",
+      "brand": "Curlsmith",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:16:12Z",
+      "metadata": {
+        "keyword": "Curlsmith hair"
+      },
+      "completed_at": "2026-04-13T13:16:59Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/curlsmith/report_20260413_131659.md"
+    },
+    {
+      "id": "lands-end-1776086220",
+      "brand": "Lands' End",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:17:00Z",
+      "metadata": {
+        "keyword": "Lands End clothing"
+      },
+      "completed_at": "2026-04-13T13:17:38Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/lands-end/report_20260413_131738.md"
+    },
+    {
+      "id": "curlsmith-1776086285",
+      "brand": "Curlsmith",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:18:05Z",
+      "metadata": {
+        "keyword": "Curlsmith hair"
+      },
+      "completed_at": "2026-04-13T13:18:49Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/curlsmith/report_20260413_131849.md"
+    },
+    {
+      "id": "lands-end-1776086329",
+      "brand": "Lands' End",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:18:49Z",
+      "metadata": {
+        "keyword": "Lands End clothing"
+      },
+      "completed_at": "2026-04-13T13:19:26Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/lands-end/report_20260413_131926.md"
+    },
+    {
+      "id": "curlsmith-1776086414",
+      "brand": "Curlsmith",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:20:14Z",
+      "metadata": {
+        "keyword": "Curlsmith"
+      },
+      "completed_at": "2026-04-13T13:20:54Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/curlsmith/report_20260413_132054.md"
+    },
+    {
+      "id": "lands-end-1776086454",
+      "brand": "Lands' End",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:20:54Z",
+      "metadata": {
+        "keyword": "Lands End"
+      },
+      "completed_at": "2026-04-13T13:21:36Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/lands-end/report_20260413_132136.md"
     }
   ]
 }
