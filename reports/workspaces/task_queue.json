@@ -1,0 +1,26 @@
+{
+  "tasks": [
+    {
+      "id": "curlsmith-1776085937",
+      "brand": "Curlsmith",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:12:17Z",
+      "metadata": {
+        "keyword": "Curlsmith hair"
+      },
+      "completed_at": "2026-04-13T13:12:57Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/curlsmith/report_20260413_131257.md"
+    },
+    {
+      "id": "lands-end-1776085977",
+      "brand": "Lands' End",
+      "status": "complete",
+      "enqueued_at": "2026-04-13T13:12:57Z",
+      "metadata": {
+        "keyword": "Lands End clothing"
+      },
+      "completed_at": "2026-04-13T13:13:44Z",
+      "result_path": "/Users/kumaresaperumal/Ideas/brand-listener/reports/workspaces/lands-end/report_20260413_131344.md"
+    }
+  ]
+}
