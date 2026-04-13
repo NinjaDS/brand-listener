@@ -22,5 +22,17 @@
       "data noise"
     ],
     "trend_alerts": []
+  },
+  {
+    "date": "2026-04-13",
+    "report": "reports/reply-group/2026-04-13-reply-group-uk.md",
+    "sentiment_score": 0.0,
+    "overall_sentiment": "neutral",
+    "top_themes": [
+      "unrelated personal relationships",
+      "off-topic Reddit content",
+      "no brand mentions detected"
+    ],
+    "trend_alerts": []
   }
 ]
