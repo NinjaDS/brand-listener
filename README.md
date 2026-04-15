@@ -21,7 +21,7 @@ Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch), t
 Week-over-week sentiment comparison. If your brand's sentiment drops significantly, you get an immediate alert — before it becomes a crisis.
 
 ### 🔍 Data Sources
-- **Reddit** — real community comments across curly hair subreddits (r/curlyhair, r/CurlyHairCare, r/wavyhair, r/NaturalHair, r/finehair, r/curlygirl)
+- **Reddit** — real community comments across relevant subreddits
 - **LinkedIn** — posts, articles, profiles mentioning your brand (via Google Search)
 - **News** — Google News RSS for the freshest press coverage
 - **Meta & TikTok** — via DuckDuckGo scraping
@@ -56,7 +56,7 @@ cp watchlist.example.json watchlist.json
 
 ### 3. Run once (manual)
 ```bash
-python3 main.py --brand "Adidas" --competitors "Nike,Puma" --topic "sportswear"
+python3 main.py --brand "YourBrand" --competitors "Competitor1,Competitor2" --topic "your topic"
 ```
 
 ### 4. Run as daemon (automated weekly)
@@ -86,41 +86,12 @@ brand-listener/
 │   ├── reddit_scraper.py            # Reddit brand mention scraper
 │   └── reddit_targeted_scraper.py   # Targeted subreddit scraper
 ├── ideas/                           # Working scripts and analysis tools
-│   ├── curlsmith_brand_positioning.py   # Positioning charts + data generator
-│   └── curlsmith_positioning_report.py  # Positioning MD report builder
 ├── scheduler/
 │   └── scheduler.py                 # Automated scheduler + adaptive loop
 ├── docs/
 │   └── ARCHITECTURE.md              # Full system architecture diagram
-└── reports/
-    └── curlsmith/
-        ├── reddit_audience_report.md        # Audience intelligence report
-        ├── brand_positioning_report.md      # Full brand positioning report
-        ├── reddit_comments_raw.json         # 487 raw Reddit comments
-        ├── positioning_data.json            # Structured positioning data
-        └── charts/
-            ├── perceptual_map.png           # Price × credibility perceptual map
-            └── attribute_scorecard.png      # Radar chart vs competitors
+└── reports/                         # Generated reports (gitignored — not committed)
 ```
-
----
-
-## 📊 Latest Reports — Curlsmith (April 2026)
-
-| Report | Link |
-|--------|------|
-| 👥 Audience Intelligence | [reddit_audience_report.md](reports/curlsmith/reddit_audience_report.md) |
-| 🗺️ Brand Positioning | [brand_positioning_report.md](reports/curlsmith/brand_positioning_report.md) |
-| 📊 Perceptual Map | [perceptual_map.png](reports/curlsmith/charts/perceptual_map.png) |
-| 📊 Attribute Scorecard | [attribute_scorecard.png](reports/curlsmith/charts/attribute_scorecard.png) |
-
-**Key findings (487 Reddit comments analysed):**
-- 🥇 Core audience: women in their **20s–30s**; secondary: parents, postpartum women
-- 💧 Strongest association: **Moisture & Hydration** (37%), not curl definition
-- 🥊 Closest competitor: **Innersense** (highest substitution risk post-acquisition)
-- ⚠️ Main risk: **formula change concern** after Helen of Troy acquisition (2022)
-- 🎯 Whitespace: postpartum hair, kids/mixed texture, men with curls — all unclaimed
-- 💡 Recommended positioning: *"The curl expert that works for real life — not just salon days"*
 
 ---
 
@@ -133,4 +104,4 @@ brand-listener/
 
 ---
 
-*Built by [Kumaresa Perumal](https://github.com/NinjaDS) · Inspired by [karpathy/autoresearch](https://github.com/karpathy/autoresearch)*
+*Built with ❤️ using [karpathy/autoresearch](https://github.com/karpathy/autoresearch) as inspiration*

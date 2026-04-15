@@ -1,8 +1,14 @@
-reports/*.html
+# Generated reports — keep private
+reports/
+
 __pycache__/
 *.pyc
 .DS_Store
 watchlist.json
+
+# Brand-specific scripts — keep private
+ideas/*_brand_positioning.py
+ideas/*_positioning_report.py
 
 # Secrets
 .env
