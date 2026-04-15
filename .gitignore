@@ -9,6 +9,8 @@ watchlist.json
 # Brand-specific scripts — keep private
 ideas/*_brand_positioning.py
 ideas/*_positioning_report.py
+core/reddit_analyser.py
+core/reddit_report_builder.py
 
 # Secrets
 .env

@@ -76,9 +76,7 @@ brand-listener/
 ├── core/
 │   ├── brand_listener.py            # Core engine: scraping + sentiment + LLM audit
 │   ├── report_html.py               # HTML report generator
-│   ├── dashboard.py                 # Streamlit dashboard
-│   ├── reddit_analyser.py           # Reddit sentiment + age/topic analysis
-│   └── reddit_report_builder.py     # Reddit audience report generator
+│   └── dashboard.py                 # Streamlit dashboard
 ├── scrapers/
 │   ├── linkedin_scraper.py          # LinkedIn posts + articles
 │   ├── meta_scraper.py              # Facebook + Instagram

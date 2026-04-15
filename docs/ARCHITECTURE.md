@@ -199,4 +199,4 @@ watchlist.json
 
 ---
 
-*Architecture by [Kumaresa Perumal](https://github.com/NinjaDS) · Brand Listener v2*
+*Brand Listener v2*
